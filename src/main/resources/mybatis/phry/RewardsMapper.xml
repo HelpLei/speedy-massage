@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.dao.RewardsDao">
+
+	<select id="get" resultType="com.bootdo.phry.domain.RewardsDO">
+		select `rewards_id`,`user_id`,`rewards_punishment_time`,`rewards_word`,`rewards_file_id`,honor_name,honor_unit,file_number  from ph_rewards where rewards_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.phry.domain.RewardsDO">
+		select `rewards_id`,`user_id`,`rewards_punishment_time`,`rewards_word`,`rewards_file_id`,honor_name,honor_unit,file_number  from ph_rewards
+        <where>  
+		  		  <if test="rewardsId != null and rewardsId != ''"> and rewards_id = #{rewardsId} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="rewardsPunishmentTime != null and rewardsPunishmentTime != ''"> and rewards_punishment_time = #{rewardsPunishmentTime} </if>
+		  		  <if test="rewardsWord != null and rewardsWord != ''"> and rewards_word = #{rewardsWord} </if>
+		  		  <if test="rewardsFileId != null and rewardsFileId != ''"> and rewards_file_id = #{rewardsFileId} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by rewards_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	<select id="searchFile" resultType="com.bootdo.phry.domain.RewardsDO">
+SELECT GROUP_CONCAT(rewards_file_id) AS rewardsFileId FROM ph_rewards WHERE user_id=#{value} GROUP BY user_id 
+	</select>
+ 	<select id="count" resultType="int">
+		select count(*) from ph_rewards
+		 <where>  
+		  		  <if test="rewardsId != null and rewardsId != ''"> and rewards_id = #{rewardsId} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="rewardsPunishmentTime != null and rewardsPunishmentTime != ''"> and rewards_punishment_time = #{rewardsPunishmentTime} </if>
+		  		  <if test="rewardsWord != null and rewardsWord != ''"> and rewards_word = #{rewardsWord} </if>
+		  		  <if test="rewardsFileId != null and rewardsFileId != ''"> and rewards_file_id = #{rewardsFileId} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.phry.domain.RewardsDO" useGeneratedKeys="true" keyProperty="rewardsId">
+		insert into ph_rewards
+		(
+			`user_id`, 
+			`rewards_punishment_time`, 
+			`rewards_word`, 
+			`rewards_file_id`,
+			`honor_name`, 
+			`honor_unit`, 
+			`file_number`
+		)
+		values
+		(
+			#{userId}, 
+			#{rewardsPunishmentTime}, 
+			#{rewardsWord}, 
+			#{rewardsFileId},
+			#{honorName}, 
+			#{honorUnit}, 
+			#{fileNumber}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.phry.domain.RewardsDO">
+		update ph_rewards 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="rewardsPunishmentTime != null">`rewards_punishment_time` = #{rewardsPunishmentTime}, </if>
+			<if test="rewardsWord != null">`rewards_word` = #{rewardsWord}, </if>
+			<if test="rewardsFileId != null">`rewards_file_id` = #{rewardsFileId}</if>
+		</set>
+		where rewards_id = #{rewardsId}
+	</update>
+	
+	<delete id="remove">
+		delete from ph_rewards where rewards_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ph_rewards where rewards_id in 
+		<foreach item="rewardsId" collection="array" open="(" separator="," close=")">
+			#{rewardsId}
+		</foreach>
+	</delete>
+
+</mapper>

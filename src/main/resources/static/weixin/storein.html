@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>诚益通综合管理系统</title>
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/mdui.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/app.css" />
+</head>
+<body>
+<!--侧边菜单栏 -->
+<div id="rightSide" ></div>
+<content>
+    <div class="con_list">
+        <div class="con_top">产品入库单</div>
+        <form>
+            <input class="search show" type="search" id="search" placeholder="入库单号/入库人/入库时间/销售单号/生产单号/生产流转卡单号/仓库名称" onchange="searchlist()"/>
+            <img src="${rc.contextPath}/statics/weixin/images/search.png">
+        </form>
+        <div class="info_list" id="dataDiv">
+            <ul id="dataUrl">
+            </ul>
+        </div>
+    </div>
+</content>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
+<script>
+    //侧边栏
+    $("#rightSide").load("${rc.contextPath}/weixin/rightSide");
+    //ajax加载列表数据
+    $.ajax({
+        url:"${rc.contextPath}/weixin/list",
+        data:{
+            page : 1,
+            limit : 10,
+            str : "storein"
+        },
+        success:function(r){
+            var data = eval("("+r+")");
+            if(data.code == 0){
+                var infos = data.page.list;
+                var haveData = '';
+                if(data.if_have_data == 0){
+                    haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                }else if(data.if_have_data == 1){
+                    haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                }
+                if(infos == null || infos == ''){
+                    haveData = '<div class="js-load-more" id="noMore" >暂无数据</div>';
+                    $("#dataDiv").after(
+                        haveData
+                    )
+                }else{
+                    for(var i=0;i<infos.length;i++){
+                        var info = infos[i];
+                        var infostatus = '';
+                        var inTime =info.inTime.substring(0,10);
+                        if(info.statue == 0){
+                            infostatus = '<span class="yellow">开立</span>';
+                        }else if(info.statue == 10){
+                            infostatus = '<span class="red">审核不通过</span>';
+                        }else if(info.statue == 20){
+                            infostatus = '<span class="green">审核通过</span>';
+                        }else{
+                            infostatus = '<span class="red">状态异常</span>';
+                        }
+                        $("#dataUrl").append(
+                            '<li>'+
+                            '<div class="list_box" onclick="detail('+info.id+')" >'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">入库单号：'+info.orderNo+'</div>'+
+                            '<div class="info_list_f_r">入库人：'+info.userName+'</div>'+
+                            '</div>'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">销售单号：'+info.saleOrder+'</div>'+
+                            '<div class="info_list_f_r">入库时间：'+inTime+'</div>'+
+                            '</div>'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">生产单号：'+info.proOrder+'</div>'+
+                            '<div class="info_list_f_r">入库仓库：'+info.storeTypeName+'</div>'+
+                            '</div>'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">流转卡单号：'+info.productCardNo+'</div>'+
+                            '<div class="info_list_f_r">状态：'+infostatus+'</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</li>'
+                        )
+                    }
+                    $("#dataDiv").after(
+                        haveData+
+                        '<span id="pageSpan">'+
+                        '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'+
+                        '</span>'
+                    )
+                }
+            }
+        }
+    })
+    //根据搜索内容查询列表数据
+    function searchlist(){
+        var username = $("#search").val();
+        $.ajax({
+            url:"${rc.contextPath}/weixin/list",
+            data:{
+                page : 1,
+                limit : 10,
+                username : username,
+                str : "storein"
+            },
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var infos = data.page.list;
+                    $("#dataUrl").empty();
+                    $("#loadMore").remove();
+                    $("#haveLoadMore").remove();
+                    $("#noMore").remove();
+                    var haveData = '';
+                    if(data.if_have_data == 0){
+                        haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                    }else if(data.if_have_data == 1){
+                        haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                    }
+                    if(infos == null || infos == ''){
+                        haveData = '<div class="js-load-more" id="noMore" >暂无数据</div>';
+                        $("#dataDiv").after(
+                            haveData
+                        )
+                    }else{
+                    	for(var i=0;i<infos.length;i++){
+                            var info = infos[i];
+                            var infostatus = '';
+                            var inTime =info.inTime.substring(0,10);
+                            if(info.statue == 0){
+                                infostatus = '<span class="yellow">开立</span>';
+                            }else if(info.statue == 10){
+                                infostatus = '<span class="red">审核不通过</span>';
+                            }else if(info.statue == 20){
+                                infostatus = '<span class="green">审核通过</span>';
+                            }else{
+                                infostatus = '<span class="red">状态异常</span>';
+                            }
+                            $("#dataUrl").append(
+                        		'<li>'+
+                                '<div class="list_box" onclick="detail('+info.id+')" >'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">入库单号：'+info.orderNo+'</div>'+
+                                '<div class="info_list_f_r">入库人：'+info.userName+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">销售单号：'+info.saleOrder+'</div>'+
+                                '<div class="info_list_f_r">入库时间：'+inTime+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">生产单号：'+info.proOrder+'</div>'+
+                                '<div class="info_list_f_r">入库仓库：'+info.storeTypeName+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">流转卡单号：'+info.productCardNo+'</div>'+
+                                '<div class="info_list_f_r">状态：'+infostatus+'</div>'+
+                                '</div>'+
+                                '</div>'+
+                                '</li>'
+                            )
+                        }
+                        $("#dataDiv").after(
+                            haveData+
+                            '<span id="pageSpan">'+
+                            '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'+
+                            '</span>'
+                        )
+                    }
+                }
+            }
+        })
+    }
+    //点击加载更多
+    function loadMore(){
+        var username = $("#search").val();
+        var page = $("#currPage").val();
+        $.ajax({
+            url:"${rc.contextPath}/weixin/list",
+            data:{
+                page : parseInt(page)+1,
+                limit : 10,
+                username : username,
+                str : "storein"
+            },
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var infos = data.page.list;
+                    for(var i=0;i<infos.length;i++){
+                    	var info = infos[i];
+                        var infostatus = '';
+                        var inTime =info.inTime.substring(0,10);
+                        if(info.statue == 0){
+                            infostatus = '<span class="yellow">开立</span>';
+                        }else if(info.statue == 10){
+                            infostatus = '<span class="red">审核不通过</span>';
+                        }else if(info.statue == 20){
+                            infostatus = '<span class="green">审核通过</span>';
+                        }else{
+                            infostatus = '<span class="red">状态异常</span>';
+                        }
+                        $("#dataUrl").append(
+                    		'<li>'+
+                            '<div class="list_box" onclick="detail('+info.id+')" >'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">入库单号：'+info.orderNo+'</div>'+
+                            '<div class="info_list_f_r">入库人：'+info.userName+'</div>'+
+                            '</div>'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">销售单号：'+info.saleOrder+'</div>'+
+                            '<div class="info_list_f_r">入库时间：'+inTime+'</div>'+
+                            '</div>'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">生产单号：'+info.proOrder+'</div>'+
+                            '<div class="info_list_f_r">入库仓库：'+info.storeTypeName+'</div>'+
+                            '</div>'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">流转卡单号：'+info.productCardNo+'</div>'+
+                            '<div class="info_list_f_r">状态：'+infostatus+'</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</li>'
+                        )
+                    }
+                    $("#loadMore").remove();
+                    var haveData = '';
+                    if(data.if_have_data == 0){
+                        haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                    }else if(data.if_have_data == 1){
+                        haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                    }
+                    $("#dataDiv").after(
+                        haveData
+                    )
+                    $("#pageSpan").empty();
+                    $("#pageSpan").append(
+                        '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'
+                    );
+                }
+            }
+        })
+    }
+    //进入详情页面
+    function detail(id){
+        location.href='${rc.contextPath}/weixin/detailhtml?id='+id+'&str=storein';
+    }
+</script>
+</body>
+</html>

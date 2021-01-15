@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>诚益通综合管理系统</title>
+
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/mdui.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/app.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/dialog.css" />
+
+</head>
+<body>
+
+<!--侧边菜单栏 -->
+<div id="rightSide" ></div>
+
+<content>
+    <div class="con_list">
+        <div class="con_top">原材料库存管理</div>
+        <div class="info_list">
+            <div class="list-form">
+                <input type="hidden" id="stockOMId" value="${id}" >
+                <div class="list-form-row">
+                    <p class="list-form-addon">原材料编码：<span>${info.code}</span></p>
+                    <p class="list-form-addon">原材料名称：<span>${info.name}</span></p>
+                    <p class="list-form-addon">数量：<span>${info.sum}</span></p>
+                    <p class="list-form-addon">单位：<span>${info.unit}</span></p>
+                    <p class="list-form-addon">所属仓库：<span>${info.storeTypeName}</span></p>
+                </div>
+
+
+                <h3 style="border-bottom: 1px #CCCCCC;padding: 0.5rem 1rem;">原材料基础信息详情</h3>
+                <div id="stockOMDetailDiv">
+
+                    <!--<div class="list-form-top">
+                        <p class="list-form-addon">物料编号：<span></span></p>
+                        <p class="list-form-addon">物料名称：<span></span></p>
+                        <p class="list-form-addon">规格型号：<span></span></p>
+                        <p class="list-form-addon">物料单位：<span></span></p>
+                        <p class="list-form-addon">物料数量：<span></span></p>
+                        <p class="list-form-addon">备注信息：<span></span></p>
+                        <p class="list-form-addon">物料库存数量：<span></span></p>
+                    </div>-->
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</content>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/weixin/js/mDialogMin.js"></script>
+<script>
+
+    var stockOMId=$("#stockOMId").val();
+
+    $(function(){
+        //侧边栏
+        $("#rightSide").load("${rc.contextPath}/weixin/rightSide");
+
+        $.ajax({
+            url:"${rc.contextPath}/weixin/stockOM/info",
+            data:{stockOMId : stockOMId},
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var detail = data.rawMaterialsEntity;
+
+                    $("#stockOMDetailDiv").empty();
+                    if('' != detail && null != detail){
+                        $("#stockOMDetailDiv").append(
+                            '<div class="list-form-top">'+
+                            '<p class="list-form-addon">原材料名称：<span>'+detail.name+'</span></p>'+
+                            '<p class="list-form-addon">原材料编码：<span>'+detail.code+'</span></p>'+
+                            '<p class="list-form-addon">原材料类别：<span>'+detail.rawName+'</span></p>'+
+                            '<p class="list-form-addon">最低库存：<span>'+detail.stockNumber+'</span></p>'+
+                            '<p class="list-form-addon">单位：<span>'+detail.unitName+'</span></p>'+
+                            '<p class="list-form-addon">创建用户：<span>'+detail.creatUser+'</span></p>'+
+                            '<p class="list-form-addon">创建时间：<span>'+detail.creatTimeStr+'</span></p>'+
+                            '<p class="list-form-addon">备注：<span>'+detail.remark+'</span></p>'+
+                            '</div>'
+                        )
+                    }else{
+                        $("#stockOMDetailDiv").append('<div class="js-load-more">暂无数据。</div>');
+                    }
+                }
+            }
+        })
+    })
+
+    //刷新本页面
+    function reload(){
+        location.href='${rc.contextPath}/weixin/detailhtml?id='+stockOMId+'&str=stockOM';
+    }
+
+    //ajax加载列表数据
+    function reloadlist(){
+
+        $.ajax({
+            url:"${rc.contextPath}/weixin/list",
+            data:{
+                page : 1,
+                limit : 10,
+                str : "stockOM"
+            },
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var infos = data.page.list;
+                    var haveData = '';
+                    if(data.if_have_data == 0){
+                        haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                    }else if(data.if_have_data == 1){
+                        haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                    }
+
+                    if(infos == null || infos == ''){
+                        haveData = '<div class="js-load-more" id="noMore" >暂无数据</div>';
+                        $("#dataDiv").after(
+                            haveData
+                        )
+                    }else{
+                        for(var i=0;i<infos.length;i++){
+                            var info = infos[i];
+
+                            $("#dataUrl").append(
+                                '<li>'+
+                                '<div class="list_box" onclick="detail('+info.id+')" >'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">'+info.code+'</div>'+
+                                '<div class="info_list_f_r">所属仓库：'+info.storeTypeName+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">原材料名称：'+info.name+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">数量：'+info.sum+'</div>'+
+                                '<div class="info_list_f_r">单位：'+info.unit+'</div>'+
+                                '</div>'+
+                                '</div>'+
+                                '</li>'
+                            )
+                        }
+                        $("#dataDiv").after(
+                            haveData+
+                            '<span id="pageSpan">'+
+                            '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'+
+                            '</span>'
+                        )
+                    }
+                }
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

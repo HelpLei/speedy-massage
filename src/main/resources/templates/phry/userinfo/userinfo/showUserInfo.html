@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<style>
+	.pull-right.pagination-detail{
+		display:none;
+	}
+</style>
+<body class="gray-bg" style="height:100%" >
+<div class="wrapper wrapper-content ">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content">
+					<div class="form-group">
+						<input type="hidden" id="userId" name="userId" th:value="${userInfoDTO.userId}" >
+						<label class="col-sm-4 control-label" style="font-size: 21px;">人员姓名：<span th:text="*{userInfoDTO.username}"></span>&nbsp;&nbsp;&nbsp; 档案编号：<span th:text="*{userInfoDTO.fileNumber}"></span>
+						
+						<button shiro:hasPermission="phry:rewards:add" type="button" class="btn  btn-primary" onclick="addRewards()">
+								<i class="fa fa-plus" aria-hidden="true"></i>添加文件
+						</button>
+						
+						</label>
+						<label class="col-sm-8 control-label">
+							<span class="pull-right" style="font-size: 28px;cursor: pointer;" onclick="javascript:(window.history.go(-1))">×</span>
+						</label> 
+					</div>
+				</div>
+				
+				<div class="ibox-content" style="clear:both">
+					<div class="form-group" style="font-size:30px;color:rgb(67,179,245);text-align:center;">
+						学历
+					</div>
+					<div>
+					<table id="exampleTable0" data-mobile-responsive="true">
+					</table>
+					</div>
+				</div>
+
+				<div class="ibox-content" style="clear:both">
+					<div class="form-group" style="font-size:30px;color:rgb(67,179,245);text-align:center;">
+						家庭成员
+					</div>
+						<div>
+					<table id="exampleTable1" data-mobile-responsive="true">
+					</table>
+					</div>
+				</div>
+
+				<div class="ibox-content" style="clear:both">
+					<div class="form-group" style="font-size:30px;color:rgb(67,179,245);text-align:center;">
+						党籍
+					</div>
+						<div>
+					<table id="exampleTable2" data-mobile-responsive="true">
+					</table>
+					</div>
+				</div>
+
+				<div class="ibox-content" style="clear:both">
+					<div class="form-group" style="font-size:30px;color:rgb(67,179,245);text-align:center;">
+						工作经历
+					</div>
+					
+						<div>
+					<table id="exampleTable3" data-mobile-responsive="true">
+					</table>
+						</div>
+				</div>
+					 <div class="ibox-content" style="clear:both">
+					<div class="form-group" style="font-size:30px;color:rgb(67,179,245);text-align:center;">
+						考核情况
+					</div>
+					
+						<div>
+					<table id="exampleTable4" data-mobile-responsive="true">
+					</table>
+				</div>
+				</div> 
+				<div class="ibox-content" style="clear:both">
+					<div class="form-group" style="font-size:30px;color:rgb(67,179,245);text-align:center;">
+						奖惩情况
+					</div>
+					
+						<div>
+					<table id="exampleTable5" data-mobile-responsive="true">
+					</table>
+				</div>
+				</div>
+				<div class="ibox-content" style="clear:both">
+					<div class="form-group" style="font-size:30px;color:rgb(67,179,245);text-align:center;">
+						个人相关事项报表
+					</div>
+					<button shiro:hasPermission="phry:rewards:add" type="button" class="btn  btn-primary" onclick="addRewards2()">
+								<i class="fa fa-plus" aria-hidden="true"></i>添加文件
+						</button>
+						<div>
+					<table id="exampleTable7" data-mobile-responsive="true">
+					</table>
+				</div>
+				</div>
+				<div class="ibox-content" style="clear:both">
+					<div class="form-group" style="font-size:30px;color:rgb(67,179,245);text-align:center;">
+						个人文件管理
+					</div>
+					<div>
+					<table id="exampleTable6" data-mobile-responsive="true">
+					</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript" src="/js/appjs/phry/userinfo/showUserInfo.js">
+</script>
+
+
+</body>
+</html>

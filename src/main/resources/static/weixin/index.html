@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>诚益通综合管理系统</title>
+
+<link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/mdui.css" />
+<link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/app.css" />
+	<link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/dialog.css" />
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+</head>
+<body>
+
+<div id="rightSide" ></div>
+<content>
+	<div class="conbg" style="margin-top: 5%">
+		<h1 style="color: #2d4373">欢迎登录诚益通综合管理系统</h1>
+		<div id="rrapp" style="width: 100%;margin-top: 5%">
+			<ul class="outul" style="width: 80%;margin-left: 25%">
+				<li style="height: 25px;font-size: 18px;font-weight: bold;color: #1a237e">待处理事项（{{message.rawstoreininfo+message.rawstoreoutinfo+message.buyingrequisition+message.purchasing+message.saleinfo+message.ininfo+message.outinfo+message.stockinginfo+message.proinfo+message.equiprepair}}条）</li>
+
+				<li style="height: 25px;color: #1a237e">销售管理（待处理{{message.saleinfo}}条）</li>
+				<li style="padding-left: 20px;">
+					<ul class="inul">
+						<li onclick="salesh()" style="height: 25px;color: #00b0ff">销售订单（待处理{{message.saleinfo}}条）</li>
+					</ul>
+				</li>
+
+				<li style="height: 25px;color: #1a237e">采购管理（待处理{{message.buyingrequisition+message.purchasing}}条）</li>
+				<li style="padding-left: 20px;">
+					<ul class="inul">
+						<li onclick="buyingrequisition2()" style="height: 25px;color: #00b0ff">请购单管理（待处理{{message.buyingrequisition}}条）</li>
+					</ul>
+					<ul class="inul">
+						<li onclick="purchasing2()" style="height: 25px;color: #00b0ff">采购单管理（待处理{{message.purchasing}}条）</li>
+					</ul>
+				</li>
+
+				<li style="height: 25px;color: #1a237e">生产管理（待处理{{message.proinfo}}条）</li>
+				<li style="padding-left: 20px;">
+					<ul class="inul">
+						<li onclick="proorder2()" style="height: 25px;color: #00b0ff">生产单管理（待处理{{message.proinfo}}条）</li>
+					</ul>
+				</li>
+
+				<li style="height: 25px;color: #1a237e">仓库管理（待处理{{message.rawstoreininfo+message.rawstoreoutinfo+message.ininfo+message.outinfo+message.stockinginfo}}条）</li>
+				<li style="padding-left: 20px;">
+					<ul class="inul">
+						<li onclick="rawstorein2()" style="height: 25px;color: #00b0ff">原材料入库管理（待处理{{message.rawstoreininfo}}条）</li>
+						<li onclick="rawstoreout2()" style="height: 25px;color: #00b0ff">原材料出库管理（待处理{{message.rawstoreoutinfo}}条）</li>
+						<li onclick="storein2()" style="height: 25px;color: #00b0ff">产品入库管理（待处理{{message.ininfo}}条）</li>
+						<li onclick="storeout2()" style="height: 25px;color: #00b0ff">产品出库管理（待处理{{message.outinfo}}条）</li>
+						<li onclick="stocking2()" style="height: 25px;color: #00b0ff">盘点管理（待处理{{message.stockinginfo}}条）</li>
+					</ul>
+				</li>
+
+				<li style="height: 25px;color: #1a237e">设备管理（待处理{{message.equiprepair}}条）</li>
+				<li style="padding-left: 20px;">
+					<ul class="inul">
+						<li onclick="equiprepair2()" style="height: 25px;color: #00b0ff">设备检修单（待处理{{message.equiprepair}}条）</li>
+					</ul>
+				</li>
+
+
+
+
+			</ul>
+
+		</div>
+	</div>
+</content>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/vue.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/bootstrap.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/fastclick.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/app.js"></script>
+<script src="${rc.contextPath}/statics/plugins/layer/layer.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/weixin/js/mDialogMin.js"></script>
+<!--<script src="${rc.contextPath}/statics/weixin/js/mdui.js"></script>-->
+<script>
+	$("#rightSide").load("../weixin/rightSide");
+
+    var vm = new Vue({
+        el:'#rrapp',
+        data:{
+            user:{},
+            menuList:{},
+            main:"sys/main.html",
+            password:'',
+            newPassword:'',
+            navTitle:"控制台",
+            message:{}
+        },
+        methods: {
+            getMessage: function(){
+                $.getJSON("${rc.contextPath}/weixin/message/getMessageInfo?_"+$.now(), function(r){
+                    vm.message=r;
+
+                });
+            }
+        },
+        created: function(){
+            this.getMessage();
+        }
+    });
+
+    function salesh() {
+        if($shiro.hasPermission("weixin:salesh")){
+            location.href="${rc.contextPath}/weixin/message/listhtml?str=salesh";
+		}else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+		}
+
+    }
+
+    function rawstorein2(){
+        if($shiro.hasPermission("weixin:rawstoreinexamine")||$shiro.hasPermission("weixin:rawstoreininstore")){
+            location.href="${rc.contextPath}/weixin/message/listhtml?str=rawstorein";
+		}else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+        }
+
+    }
+
+    function storeout2(){
+        if($shiro.hasPermission("weixin:storeoutexamine")){
+            location.href="${rc.contextPath}/weixin/storeout";
+		}else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+        }
+
+    }
+
+    function storein2(){
+        if($shiro.hasPermission("weixin:storeinexamine")){
+            location.href="${rc.contextPath}/weixin/storein";
+        }else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+        }
+
+    }
+
+    function stocking2(){
+        if($shiro.hasPermission("weixin:stockingexamine")){
+            location.href="${rc.contextPath}/weixin/stocking";
+        }else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+        }
+
+    }
+
+    function rawstoreout2(){
+        if($shiro.hasPermission("weixin:rawstoreoutexamine")||$shiro.hasPermission("weixin:rawstoreoutoutstore")||$shiro.hasPermission("weixin:rawstoreoutqin")){
+            location.href="${rc.contextPath}/weixin/message/listhtml?str=rawstoreout";
+        }else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+        }
+
+    }
+    
+    function buyingrequisition2(){
+        if($shiro.hasPermission("weixin:buyingrequisition")){
+            location.href="${rc.contextPath}/weixin/message/listhtml?str=buyingrequisition";
+		}else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+        }
+    }
+    
+    function purchasing2(){
+        if($shiro.hasPermission("weixin:purchasing")){
+            location.href="${rc.contextPath}/weixin/message/listhtml?str=purchasing";
+		}else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+        }
+
+    }
+
+    function proorder2() {
+        if($shiro.hasPermission("weixin:productionorderexamine")){
+            location.href="${rc.contextPath}/weixin/productionorder";
+        }else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+        }
+    }
+
+    function equiprepair2() {
+        if($shiro.hasPermission("weixin:equipmentsh")){
+            location.href="${rc.contextPath}/weixin/equipmentrepair";
+        }else{
+            Dialog.init("你没有相关权限，请联系管理员！");
+        }
+    }
+
+</script>
+</body>
+</html>

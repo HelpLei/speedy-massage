@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="/js/plugins/jquerypdf/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jquerypdf/jquery.media.js"></script>
+
+<script type="text/javascript">
+    function showFile(fileId) {
+        layer.open({
+            type : 2,
+            title : '文件',
+            maxmin : true,
+            shadeClose : false, // 点击遮罩关闭层
+            area : [ '100%', '100%' ],
+            content : '/phry/user/showFile/'+fileId // iframe的url
+        });
+    }
+</script>
+<body class="gray-bg" style="padding: 50px;">
+		<div class="col-sm-12">
+			<div class="col-sm-12" style="font-size: 26px;border-bottom: 1px solid #eee">图片：</div>
+			<th:block th:each="fileDO,iterStat:${fileDOImgList}">
+				<div class="col-sm-3" style="text-align: center;">
+					<img  th:src="${fileDO.url}" th:onclick="'showFile('+${fileDO.id}+');'"  style="height: 180px;width: 180px;text-align: center;margin: 20px 0px;cursor: pointer">
+				</div>
+			</th:block>
+		</div>
+
+		<div class="col-sm-12">
+			<div class="col-sm-12" style="font-size: 26px;border-bottom: 1px solid #eee">文档：</div>
+			<th:block th:each="fileDO,iterStat:${fileDODocList}">
+				<div class="col-sm-3" style="margin-top: 20px;">
+					<a style="font-size: 18px;" th:href="${fileDO.url}"  th:text="${fileDO.originalFilename}"></a>
+				</div>
+			</th:block>
+		</div>
+
+		<div class="hidden"></div>
+
+	<div th:include="include::footer"></div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.weixin.dao.MessageDao">
+
+    <select id="queryListWeixin" resultType="package com.bootdo.phry.weixin.entity.SysMenuEntity">
+        select * from sys_menu
+        <where>
+
+            <if test="name != null and name.trim() != ''">
+                parent_id in (select menu_id from sys_menu where name=#{name} and type=1 and parent_id in (select menu_id from sys_menu where name like concat('%','微信','%') and type=1))
+            </if>
+            <if test="menuId != null">
+                and menu_id in (select menu_id from sys_role_menu where role_id=#{menuId})
+            </if>
+        </where>
+    </select>
+
+    <select id="RsiExamineCount" resultType="int">
+        select count(1) from raw_store_in where statue=0 or statue is null
+    </select>
+
+    <select id="RsiRukuCount" resultType="int">
+        select count(1) from raw_store_in where statue=10
+    </select>
+
+    <select id="RsoExamineCount" resultType="int">
+        select count(1) from raw_store_out where statue=0 or statue is null
+    </select>
+
+    <select id="RsoRukuCount" resultType="int">
+        select count(1) from raw_store_out where statue=10 or statue=50 or statue=55
+    </select>
+
+    <select id="RsoBuyCount" resultType="int">
+        select count(1) from raw_store_out where statue=20 or statue=30
+    </select>
+	
+	 <select id="WeiBuyChooseCount" resultType="int">
+        select count(1) from buy where (statue=0 or statue is null)
+    </select>
+     <select id="WeiBuyListCount" resultType="int">
+        select count(1) from buy where statue=1 or statue=2 or statue=3 or statue=4 or statue=5 or statue=6
+    </select>
+	
+	<select id="WeiPurchasingChooseCount" resultType="int">
+        select count(1) from purchase where (statue=0 or statue is null)
+    </select>
+
+    <select id="WeiSaleCount" resultType="int">
+        select count(1) from sale where (statue = 0 or statue is null)
+    </select>
+
+    <select id="WeiInCount" resultType="int">
+        select count(1) from store_in where statue=0 or statue is null
+    </select>
+
+    <select id="WeiOutCount" resultType="int">
+        select count(1) from store_out where statue=0 or statue is null
+    </select>
+
+    <select id="WeiStockingCount" resultType="int">
+        select count(1) from stocking where statue=0 or statue is null
+    </select>
+
+    <select id="WeiProOrderCount" resultType="int">
+        select count(1) from production_order where statue=0 or statue is null
+    </select>
+
+    <select id="WeiEquiprepairCount" resultType="int">
+        select count(1) from equipment_repair where statue=0 or statue is null
+    </select>
+
+</mapper>

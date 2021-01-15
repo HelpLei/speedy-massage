@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>诚益通综合管理系统</title>
+
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/mdui.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/app.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/dialog.css" />
+
+</head>
+<body>
+
+<!--侧边菜单栏 -->
+<div id="rightSide" ></div>
+
+<content>
+    <div class="con_list">
+        <div class="con_top">产品库存管理</div>
+        <div class="info_list">
+            <div class="list-form">
+                <input type="hidden" id="stockId" value="${id}" >
+                <div class="list-form-row">
+                    <p class="list-form-addon">产品编码：<span>${info.code}</span></p>
+                    <p class="list-form-addon">产品名称：<span>${info.name}</span></p>
+                    <p class="list-form-addon">数量：<span>${info.sum}</span></p>
+                    <p class="list-form-addon">单位：<span>${info.unit}</span></p>
+                    <p class="list-form-addon">所属仓库：<span>${info.storeTypeName}</span></p>
+                </div>
+
+
+                <h3 style="border-bottom: 1px #CCCCCC;padding: 0.5rem 1rem;">产品基础信息详情</h3>
+                <div id="stockDetailDiv">
+
+                    <!--<div class="list-form-top">
+                        <p class="list-form-addon">物料编号：<span></span></p>
+                        <p class="list-form-addon">物料名称：<span></span></p>
+                        <p class="list-form-addon">规格型号：<span></span></p>
+                        <p class="list-form-addon">物料单位：<span></span></p>
+                        <p class="list-form-addon">物料数量：<span></span></p>
+                        <p class="list-form-addon">备注信息：<span></span></p>
+                        <p class="list-form-addon">物料库存数量：<span></span></p>
+                    </div>-->
+                </div>
+                <!--<h6 style="border-bottom: 1px #CCCCCC;padding: 0.5rem 1rem;">产品所需原材料</h6>
+                <div id="rawUI">
+
+                </div>-->
+
+
+            </div>
+
+        </div>
+    </div>
+</content>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/weixin/js/mDialogMin.js"></script>
+<script>
+
+    var stockId=$("#stockId").val();
+
+    $(function(){
+        //侧边栏
+        $("#rightSide").load("${rc.contextPath}/weixin/rightSide");
+
+        $.ajax({
+            url:"${rc.contextPath}/weixin/stock/info",
+            data:{stockId : stockId},
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var detail = data.productEntity;
+
+                    $("#stockDetailDiv").empty();
+                    if('' != detail && null != detail){
+                        $("#stockDetailDiv").append(
+                            '<div class="list-form-top">'+
+                            '<p class="list-form-addon">产品名称：<span>'+detail.name+'</span></p>'+
+                            '<p class="list-form-addon">产品编码：<span>'+detail.code+'</span></p>'+
+                            '<p class="list-form-addon">客户简称：<span>'+detail.clientName+'</span></p>'+
+                            '<p class="list-form-addon">计量单位名称：<span>'+detail.unitName+'</span></p>'+
+                            '<p class="list-form-addon">图号：<span>'+detail.figureNumber+'</span></p>'+
+                            '<p class="list-form-addon">创建用户：<span>'+detail.userName+'</span></p>'+
+                            '<p class="list-form-addon">创建时间：<span>'+detail.creatTimeStr+'</span></p>'+
+                            '<p class="list-form-addon">备注：<span>'+detail.remark+'</span></p>'+
+                            '</div>'
+                        )
+                    }else{
+                        $("#stockDetailDiv").append('<div class="js-load-more">暂无数据。</div>');
+                    }
+
+                    /*var detail2 = data.productOrderList;
+                    $("#rawUI").empty();
+                    if('' != detail2 && null != detail2){
+                        for(var i=0; i<detail2.length; i++){
+                            var d = detail2[i];
+
+                            $("#rawUI").append(
+                                '<div class="list-form-top">'+
+                                '<p class="list-form-addon">原材料名称：<span>'+d.rawMaterialsName+'</span></p>'+
+                                '<p class="list-form-addon">计量单位：<span>'+d.unitName+'</span></p>'+
+                                '<p class="list-form-addon">数量：<span>'+d.userNumber+'</span></p>'+
+                                '</div>'
+                            )
+                        }
+                    }else{
+                        $("#rawUI").append('<div class="js-load-more">暂无数据。</div>');
+                    }*/
+
+                }
+            }
+        })
+    })
+
+    //刷新本页面
+    function reload(){
+        location.href='${rc.contextPath}/weixin/detailhtml?id='+stockId+'&str=stock';
+    }
+
+    //ajax加载列表数据
+    function reloadlist(){
+
+        $.ajax({
+            url:"${rc.contextPath}/weixin/list",
+            data:{
+                page : 1,
+                limit : 10,
+                str : "stock"
+            },
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var infos = data.page.list;
+                    var haveData = '';
+                    if(data.if_have_data == 0){
+                        haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                    }else if(data.if_have_data == 1){
+                        haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                    }
+
+                    if(infos == null || infos == ''){
+                        haveData = '<div class="js-load-more" id="noMore" >暂无数据</div>';
+                        $("#dataDiv").after(
+                            haveData
+                        )
+                    }else{
+                        for(var i=0;i<infos.length;i++){
+                            var info = infos[i];
+
+                            $("#dataUrl").append(
+                                '<li>'+
+                                '<div class="list_box" onclick="detail('+info.id+')" >'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">'+info.code+'</div>'+
+                                '<div class="info_list_f_r">所属仓库：'+info.storeTypeName+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">产品名称：'+info.name+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">数量：'+info.sum+'</div>'+
+                                '<div class="info_list_f_r">单位：'+info.unit+'</div>'+
+                                '</div>'+
+                                '</div>'+
+                                '</li>'
+                            )
+                        }
+                        $("#dataDiv").after(
+                            haveData+
+                            '<span id="pageSpan">'+
+                            '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'+
+                            '</span>'
+                        )
+                    }
+                }
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

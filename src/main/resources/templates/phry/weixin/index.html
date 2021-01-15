@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<style>
+.btn2 {
+    border-radius: 3px;
+}
+.btn-success2 {
+    background-color: #1c84c6;
+    border-color: #1c84c6;
+    color: #FFFFFF;
+   position:relative; left:-40px;
+}
+.form-control2, .single-line2 {
+    background: #FFFFFF none;
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    color: inherit;
+    display: block;
+    padding: 6px 12px;
+    -webkit-transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+/*     width: 150%; */
+    font-size: 14px;
+   /*  position:relative; left:-50%; */
+}
+.nopadding2 {
+    padding: 0;
+}
+@media screen and (max-width: 300px) {
+    body {
+        background-color:lightblue;
+    }
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fafafa;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+.dropdown-content a:hover {
+    color: white;
+    background-color: #1f75cf;
+}
+
+ .columns2{
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    line-height: 30px;
+}
+</style>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-9">
+				<div class="ibox">
+					<div class="ibox-body">
+				
+						 <div class="fixed-table-toolbar" style="width:100%">
+					
+							<div class="columns pull-right" style="width:20%">
+								<button class="btn btn-success" style="position:relative; left:-10%;" onclick="reLoad()">查询</button>
+							</div>
+								
+							<div class="columns pull-right col-md-2 " style="width:70%;float:left">
+								<input id="searchName" type="text" class="form-control2 nopadding2"
+									   placeholder="姓名/手机号/身份证号" style="width:100%">
+							</div>
+						
+						</div> 
+						<div class="fixed-table-toolbar" style="width:100%">
+						<div class="columns pull-right col-md-2 ">
+								<select data-placeholder="--办事处--" name="nation" id="nation" style="position:relative;left:-15%;" class="form-control chosen-select" tabindex="2">
+									<option value="">-- 办事处 --</option>
+									 <tr th:each="emp : ${sysDeptList}">
+            							<option th:text="${emp.name}" value:text="${emp.deptId}" ></option>
+        						</tr>
+								</select>
+							</div>
+						</div>
+						<!-- 	<div class="fixed-table-toolbar">
+						<div class="columns2 pull-right">
+							  <select data-placeholder="部门选择"  class="btn btn-success"  style="position:relative;left:-90%;" tabindex="2">
+                               
+                                 <tr th:each="emp : ${sysDeptList}">
+            							<option th:text="${emp.name}" ></option>
+        						</tr>
+							</div>
+								</div> -->
+						<table id="exampleTable" data-mobile-responsive="true">
+						</table>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		
+		
+
+	</div>
+	
+	</div>
+	<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/js/appjs/phry/index.js"></script>
+
+ 
+
+ 
+</script>
+</body>
+</html>

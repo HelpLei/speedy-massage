@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.dao.CheckDao">
+
+	<select id="get" resultType="com.bootdo.phry.domain.CheckDO">
+		select `check_id`,`user_id`,`check_time`,`check_word`,`check_file_id`,check_year,check_glass  from ph_check where check_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.phry.domain.CheckDO">
+		select `check_id`,`user_id`,`check_time`,`check_word`,`check_file_id`,check_year,check_glass  from ph_check
+        <where>  
+		  		  <if test="checkId != null and checkId != ''"> and check_id = #{checkId} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="checkTime != null and checkTime != ''"> and check_time = #{checkTime} </if>
+		  		  <if test="checkWord != null and checkWord != ''"> and check_word = #{checkWord} </if>
+		  		  <if test="checkFileId != null and checkFileId != ''"> and check_file_id = #{checkFileId} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by check_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="CRlist" resultType="com.bootdo.phry.domain.CheckDO">
+		 SELECT * FROM ph_check   
+		 <where> <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		 </where> 
+		 UNION 
+  			SELECT * FROM  `ph_rewards` 
+   		<where> <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		 </where> 
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	<select id="CRcount" resultType="int">
+		 SELECT COUNT(*) FROM ( SELECT * FROM ph_check   
+		 <where> <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		 </where> 
+		 UNION 
+  			SELECT * FROM  `ph_rewards` 
+   		<where> <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		 </where> 
+		) AS a
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ph_check
+		 <where>  
+		  		  <if test="checkId != null and checkId != ''"> and check_id = #{checkId} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="checkTime != null and checkTime != ''"> and check_time = #{checkTime} </if>
+		  		  <if test="checkWord != null and checkWord != ''"> and check_word = #{checkWord} </if>
+		  		  <if test="checkFileId != null and checkFileId != ''"> and check_file_id = #{checkFileId} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.phry.domain.CheckDO" useGeneratedKeys="true" keyProperty="checkId">
+		insert into ph_check
+		(
+			`user_id`, 
+			`check_time`, 
+			`check_word`, 
+			`check_file_id`,
+			`check_year`,
+			`check_glass`
+		)
+		values
+		(
+			#{userId}, 
+			#{checkTime}, 
+			#{checkWord}, 
+			#{checkFileId},
+			#{checkYear}, 
+			#{checkGlass}
+			
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.phry.domain.CheckDO">
+		update ph_check 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="checkTime != null">`check_time` = #{checkTime}, </if>
+			<if test="checkWord != null">`check_word` = #{checkWord}, </if>
+			<if test="checkFileId != null">`check_file_id` = #{checkFileId},</if>
+			<if test="checkYear != null">`check_year` = #{checkYear}, </if>
+			<if test="checkGlass != null">`check_glass` = #{checkGlass}</if>
+		</set>
+		where check_id = #{checkId}
+	</update>
+	
+		<select id="searchFile" resultType="com.bootdo.phry.domain.CheckDO">
+SELECT GROUP_CONCAT(check_file_id) AS checkFileId FROM ph_check WHERE user_id=#{value} GROUP BY user_id 
+	</select>
+	
+	<delete id="remove">
+		delete from ph_check where check_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ph_check where check_id in 
+		<foreach item="checkId" collection="array" open="(" separator="," close=")">
+			#{checkId}
+		</foreach>
+	</delete>
+
+</mapper>

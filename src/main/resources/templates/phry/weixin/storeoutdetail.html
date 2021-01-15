@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>诚益通综合管理系统</title>
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/mdui.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/app.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/dialog.css" />
+</head>
+<body>
+<!--侧边菜单栏 -->
+<div id="rightSide" ></div>
+<content>
+    <div class="con_list">
+        <div class="con_top">产品出库单</div>
+        <div class="info_list">
+            <div class="list-form">
+                <input type="hidden" id="storeOutId" value="${id}" >
+                <div class="list-form-row">
+                    <p class="list-form-addon">产品出库单号：<span>${info.orderNo}</span></p>
+                    <p class="list-form-addon">出库人：<span>${info.userName}</span></p>
+                    <p class="list-form-addon">出库时间：<span>${info.outTimeStr}</span></p>
+                    <p class="list-form-addon">销售单号：<span>${info.saleOrder}</span></p>
+                    <p class="list-form-addon">客户简称：<span>${info.clientName}</span></p>
+                    <p class="list-form-addon">创建人：<span>${info.creatUser}</span></p>
+                    <p class="list-form-addon">创建时间：<span>${info.creatTimeStr}</span></p>
+                    <p class="list-form-addon">状态：<span>${info.statueStr}</span></p>
+                    <p class="list-form-addon">审核意见：<br/><span>${info.audtiOpinion2}</span></p>
+                    <p class="list-form-addon">备注：${info.remark}</p>
+                </div>
+                <h3 style="border-bottom: 1px #CCCCCC;padding: 0.5rem 1rem;">产品出库单详情</h3>
+                <div id="storeOutDetailDiv">
+                </div>
+                <div style="width:100%;overflow: hidden;">
+                    #if($shiro.hasPermission("weixin:storeoutexamine"))
+                    <input type="button" class="button" style="margin: 1rem 30%;" id="stateone" title="审核" value="审核" />
+                    #end
+                </div>
+            </div>
+        </div>
+    </div>
+</content>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/weixin/js/mDialogMin.js"></script>
+<script>
+    //权限判断
+    var one = false;
+    if($shiro.hasPermission("weixin:storeoutexamine")){
+    	one = true;
+    }
+    var storeOutId = $("#storeOutId").val();
+    $(function(){
+        //侧边栏
+        $("#rightSide").load("${rc.contextPath}/weixin/rightSide");
+        $.ajax({
+            url:"${rc.contextPath}/weixin/storeout/info",
+            data:{storeOutId : storeOutId},
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var details = data.storeOutDetailList;
+                    $("#storeOutDetailDiv").empty();
+                    if(null != details && '' != details){
+                        for(var i=0; i<details.length; i++){
+                            var detail = details[i];
+                            $("#storeOutDetailDiv").append(
+                                '<div class="list-form-top">'+
+                                '<p class="list-form-addon">产品名称：<span>'+detail.name+'</span></p>'+
+                                '<p class="list-form-addon">产品编码：<span>'+detail.code+'</span></p>'+
+                                '<p class="list-form-addon">单位：<span>'+detail.unit+'</span></p>'+
+                                '<p class="list-form-addon">数量：<span>'+detail.sum+'</span></p>'+
+                                '<p class="list-form-addon">产品所在仓库：<span>'+detail.storeTypeName+'</span></p>'+
+                                '<p class="list-form-addon">备注：<span>'+detail.remark+'</span></p>'+
+                                '</div>'
+                            )
+                        }
+                    }else{
+                        $("#storeOutDetailDiv").append('<div class="js-load-more">暂无数据。</div>');
+                    }
+                }
+            }
+        })
+    })
+    //刷新本页面
+    function reload(){
+        location.href='${rc.contextPath}/weixin/detailhtml?id='+storeOutId+'&str=storeout';
+    }
+    //ajax加载列表数据
+    function reloadlist(){
+        $.ajax({
+            url:"${rc.contextPath}/weixin/list",
+            data:{
+                page : 1,
+                limit : 10,
+                str : "storeout"
+            },
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var infos = data.page.list;
+                    var haveData = '';
+                    if(data.if_have_data == 0){
+                        haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                    }else if(data.if_have_data == 1){
+                        haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                    }
+                    if(infos == null || infos == ''){
+                        haveData = '<div class="js-load-more" id="noMore" >暂无数据</div>';
+                        $("#dataDiv").after(
+                            haveData
+                        )
+                    }else{
+                        for(var i=0;i<infos.length;i++){
+                        	var info = infos[i];
+                            var infostatus = '';
+                            var outTime =info.outTime.substring(0,10);
+                            if(info.statue == 0){
+                                infostatus = '<span class="yellow">开立</span>';
+                            }else if(info.statue == 10){
+                                infostatus = '<span class="red">审核不通过</span>';
+                            }else if(info.statue == 20){
+                                infostatus = '<span class="green">审核通过</span>';
+                            }else{
+                                infostatus = '<span class="red">状态异常</span>';
+                            }
+                            $("#dataUrl").append(
+                                '<li>'+
+                                '<div class="list_box" onclick="detail('+info.id+')" >'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">出库单号：'+info.orderNo+'</div>'+
+                                '<div class="info_list_f_r">出库人：'+info.userName+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">销售单号：'+info.saleOrder+'</div>'+
+                                '<div class="info_list_f_r">出库时间：'+outTime+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">客户简称：'+info.clientName+'</div>'+
+                                '<div class="info_list_f_r">状态：'+infostatus+'</div>'+
+                                '</div>'+
+                                '</div>'+
+                                '</li>'
+                            )
+                        }
+                        $("#dataDiv").after(
+                            haveData+
+                            '<span id="pageSpan">'+
+                            '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'+
+                            '</span>'
+                        )
+                    }
+                }
+            }
+        })
+    }
+    if(one){
+	     stateone.onclick = function(){
+		     if("${info.statueStr}".indexOf('开立') < 0){
+			     Dialog.init('您好！请对"开立"状态的数据进行审核！');
+			     return ;
+		     }
+		     Dialog.init('<input type="text" placeholder="请输入意见"  style="margin:8px 0;width:100%;padding:11px 8px;font-size:15px; border:1px solid #999;"/>',{
+		     	 title : '立即审核',
+			     button : {
+			     	审核通过 : function(){
+				     var examineRemark = this.querySelector('input').value;
+				     if(examineRemark.length < 255){
+					     $.ajax({
+						     url: "${rc.contextPath}/weixin/storeout/examine",
+						     data: {
+							 	storeId : storeOutId,
+							    examineStatus : 20,
+							    examineRemark : (examineRemark==null||examineRemark=="")?"无":examineRemark,
+						     },
+						     success: function(r){
+							     var data = eval("("+r+")");
+							     if(data.code == 0){
+								     Dialog.init("操作成功！");
+								     reloadlist();
+								     reload();
+							     }else{
+								     Dialog.init("操作失败，请重试！");
+								     Dialog.close(this);
+							     }
+						     }
+					     })
+				     }else{
+				     	Dialog.init('请把字数控制在255个以内！',1100);
+				     }
+			     },
+			     不通过 : function(){
+				     var examineRemark = this.querySelector('input').value;
+				     if(examineRemark.length < 255){
+					     $.ajax({
+						     url: "${rc.contextPath}/weixin/storeout/examine",
+						     data: {
+						    	 storeId : storeOutId,
+								 examineStatus : 10,
+								 examineRemark : (examineRemark==null||examineRemark=="")?"无":examineRemark,
+						     },
+						     success: function(r){
+							     var data = eval("("+r+")");
+							     if(data.code == 0){
+								     Dialog.init("操作成功！");
+								     reloadlist();
+								     reload();
+							     }else{
+								     Dialog.init("操作失败，请重试！");
+								     Dialog.close(this);
+							     }
+						     }
+					     })
+				     }else{
+				     	Dialog.init('请把字数控制在255个以内！',1100);
+				     }
+			     }
+		     }
+		     });
+	     }
+     }
+</script>
+</body>
+</html>

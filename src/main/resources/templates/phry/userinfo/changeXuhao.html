@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+						<input id="userId" name="userId" th:value="${user.userId}"  type="hidden">
+
+						
+
+							<!-- <div class="form-group">	
+								<label class="col-sm-3 control-label">姓名：</label>
+								<div class="col-sm-8">
+									<input id="username" name="username" th:value="${user.username}"
+										   placeholder="请输入长度不大于30的字符" maxlength="30" onkeyup="this.value=this.value.replace(/\s+/g,'')" class="form-control" type="text">
+								</div>
+							</div> -->
+							<div class="form-group">	
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>序号：</label>
+								<div class="col-sm-8">
+									<input id="allsort" name="allsort" th:value="${user.allsort}"
+										  class="form-control" type="text">
+								</div>
+							</div>
+
+
+
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/phry/userinfo/changeXuhao.js">
+	</script>
+	<script>
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#birth',
+                type: 'date',
+                range: false,
+                format: 'yyyy-M-d'
+            });
+        })
+	</script>
+</body>
+</html>

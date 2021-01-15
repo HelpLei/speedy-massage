@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+
+<script type="text/javascript" src="/js/plugins/jquerypdf/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jquerypdf/jquery.media.js"></script>
+<style>
+	.gray-bg {
+		background-color: #f3f3f4;
+	}
+</style>
+<script type="text/javascript">
+    $(function () {
+        var url = $("#url").val();
+        var originalFilename = $("#originalFilename").val();
+        if(originalFilename.indexOf("pdf") < 0){
+            $("#preview").html("<img src='"+url+"' style='width: 25%;height: 25%;' >");
+        }else {
+            $("#preview").html("");
+            $("#preview").html('<a class="media" href='+url+'></a>');
+            $('a.media').media({width:"25%", height:"25%"});
+        }
+    });
+</script>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12" style="height: 600px;min-height: 600px;text-align: center;margin: 20px 0px;">
+				<center>
+					<div id="preview">
+
+					</div>
+				</center>
+				<input id="url" type="hidden" th:value="${fileDO.url}">
+				<input id="originalFilename" type="hidden" th:value="${fileDO.originalFilename}">
+			</div>
+		</div>
+	</div>
+</body>
+</html>

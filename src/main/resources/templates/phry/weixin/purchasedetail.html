@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>诚益通综合管理系统</title>
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/mdui.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/app.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/dialog.css" />
+</head>
+<body>
+<!--侧边菜单栏 -->
+<div id="rightSide" ></div>
+<content>
+    <div class="con_list">
+        <div class="con_top">采购订单</div>
+        <div class="info_list">
+            <div class="list-form">
+                <input type="hidden" id="purchaseId" value="${id}" >
+                <div class="list-form-row">
+                    <p class="list-form-addon">采购单号：<span>${info.orderNo}</span></p>
+                    <p class="list-form-addon">采购人：<span>${info.userName}</span></p>
+                    <p class="list-form-addon">请购单号：<span>${info.buyOrder}</span></p>
+                    <p class="list-form-addon">供应商名称：<span>${info.supplierName}</span></p>
+                    <p class="list-form-addon">供应商联系人：<span>${info.supplierContact}</span></p>
+                    <p class="list-form-addon">供应商电话：<span>${info.supplierPhone}</span></p>
+                    <p class="list-form-addon">供应商地址：<span>${info.supplierAdress}</span></p>
+                    <p class="list-form-addon">创建人：<span>${info.creatUserId}</span></p>
+                    <p class="list-form-addon">创建时间：<span>${info.creatTimeStr}</span></p>
+                    <p class="list-form-addon">审核人：<span>${info.auditUserId}</span></p>
+                    <p class="list-form-addon">审核时间：<span>${info.auditTimeStr}</span></p>
+                    <p class="list-form-addon">审核意见：<span>${info.auditOpinion}</span></p>
+                    <p class="list-form-addon">状态：<span>${info.statueStr}</span></p>
+                    <p class="list-form-addon">备注：<span>${info.remark}</span></p>
+                </div>
+                <h3 style="border-bottom: 1px #CCCCCC;padding: 0.5rem 1rem;">采购订单详情</h3>
+                <div id="storeInDetailDiv">
+                </div>
+                <div style="width:100%;overflow: hidden;">
+                    #if($shiro.hasPermission("weixin:purchasesh"))
+                    <input type="button" class="button" style="margin: 1rem 30%;" id="stateone" title="审核" value="审核" />
+                    #end
+                </div>
+            </div>
+        </div>
+    </div>
+</content>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/weixin/js/mDialogMin.js"></script>
+<script>
+    //权限判断
+    var one = false;
+    if($shiro.hasPermission("weixin:purchasesh")){
+    one = true;
+    }
+    var purchaseId = $("#purchaseId").val();
+    $(function(){
+        //侧边栏
+        $("#rightSide").load("${rc.contextPath}/weixin/rightSide");
+        $.ajax({
+            url:"${rc.contextPath}/weixin/purchase/info",
+            data:{purchaseId : purchaseId},
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var details = data.purchaseDetailList;
+                    $("#storeInDetailDiv").empty();
+                    if(null != details && '' != details){
+                        for(var i=0; i<details.length; i++){
+                            var detail = details[i];
+                            $("#storeInDetailDiv").append(
+                                '<div class="list-form-top">'+
+                                '<p class="list-form-addon">原材料名称：<span>'+detail.rawMaterialsName+'</span></p>'+
+                                '<p class="list-form-addon">原材料编码：<span>'+detail.rawMaterialsCode+'</span></p>'+
+                                '<p class="list-form-addon">单位：<span>'+detail.unit+'</span></p>'+
+                                '<p class="list-form-addon">数量：<span>'+detail.sum+'</span></p>'+
+                                '<p class="list-form-addon">价格：<span>'+detail.price+'</span></p>'+
+                                '</div>'
+                            )
+                        }
+                    }else{
+                        $("#storeInDetailDiv").append('<div class="js-load-more">暂无数据。</div>');
+                    }
+                }
+            }
+        })
+    })
+    //刷新本页面
+    function reload(){
+        location.href='${rc.contextPath}/weixin/detailhtml?id='+purchaseId+'&str=purchase';
+    }
+    //ajax加载列表数据
+    function reloadlist(){
+        $.ajax({
+            url:"${rc.contextPath}/weixin/list",
+            data:{
+                page : 1,
+                limit : 10,
+                str : "purchase"
+            },
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var infos = data.page.list;
+                    var haveData = '';
+                    if(data.if_have_data == 0){
+                        haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                    }else if(data.if_have_data == 1){
+                        haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                    }
+                    if(infos == null || infos == ''){
+                        haveData = '<div class="js-load-more" id="noMore" >暂无数据</div>';
+                        $("#dataDiv").after(
+                            haveData
+                        )
+                    }else{
+                        for(var i=0;i<infos.length;i++){
+                        	var info = infos[i];
+                            var infostatus = '';
+                            var inTime =info.inTime.substring(0,10);
+                            if(info.statue == 0){
+                                infostatus = '<span class="yellow">开立</span>';
+                            }else if(info.statue == 2){
+                                infostatus = '<span class="red">审核不通过</span>';
+                            }else if(info.statue == 1){
+                                infostatus = '<span class="green">审核通过</span>';
+                            }else if(info.statue == 3){
+                                infostatus = '<span class="purple">部分入库</span>';
+                            }else if(info.statue == 4){
+                                infostatus = '<span class="dark-blue">全部入库</span>';
+                            }else{
+                                infostatus = '<span class="yellow">开立</span>';
+                            }
+
+                            $("#dataUrl").append(
+                                '<li>'+
+                                '<div class="list_box" onclick="detail('+info.id+')" >'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">采购单号'+info.orderNo+'</div>'+
+                                '<div class="info_list_f_r">请购单号：'+info.buyOrder+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">供应商名称：'+info.supplierName+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_s">'+
+                                '<div class="info_list_s_l">供应商联系人：'+info.supplierContact+'</div>'+
+                                '<div class="info_list_s_r">'+infostatus+'</div>'+
+                                '</div>'+
+                                '</div>'+
+                                '</li>'
+                            )
+                        }
+                        $("#dataDiv").after(
+                            haveData+
+                            '<span id="pageSpan">'+
+                            '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'+
+                            '</span>'
+                        )
+                    }
+                }
+            }
+        })
+    }
+    if(one){
+	     stateone.onclick = function(){
+		     if("${info.statueStr}".indexOf('开立') < 0){
+			     Dialog.init('您好！请对"开立"状态的数据进行审核！');
+			     return ;
+		     }
+		     Dialog.init('<input type="text" placeholder="请输入意见"  style="margin:8px 0;width:100%;padding:11px 8px;font-size:15px; border:1px solid #999;"/>',{
+		     	 title : '立即审核',
+			     button : {
+			     	审核通过 : function(){
+				     var examineRemark = this.querySelector('input').value;
+				     if(examineRemark.length < 255){
+					     $.ajax({
+						     url: "${rc.contextPath}/weixin/purchase/examine",
+						     data: {
+							 	id : purchaseId,
+							    examineStatus : 1,
+							    examineRemark : examineRemark==null?"":examineRemark,
+						     },
+						     success: function(r){
+							     var data = eval("("+r+")");
+							     if(data.code == 0){
+								     Dialog.init("操作成功！");
+								     reloadlist();
+								     reload();
+							     }else{
+								     Dialog.init("操作失败，请重试！");
+								     Dialog.close(this);
+							     }
+						     }
+					     })
+				     }else{
+				     	Dialog.init('请把字数控制在255个以内！',1100);
+				     }
+			     },
+			     不通过 : function(){
+				     var examineRemark = this.querySelector('input').value;
+				     if(examineRemark.length < 255){
+					     $.ajax({
+						     url: "${rc.contextPath}/weixin/purchase/examine",
+						     data: {
+						    	 id : purchaseId,
+								 examineStatus : 2,
+								 examineRemark : examineRemark==null?"":examineRemark,
+						     },
+						     success: function(r){
+							     var data = eval("("+r+")");
+							     if(data.code == 0){
+								     Dialog.init("操作成功！");
+								     reloadlist();
+								     reload();
+							     }else{
+								     Dialog.init("操作失败，请重试！");
+								     Dialog.close(this);
+							     }
+						     }
+					     })
+				     }else{
+				     	Dialog.init('请把字数控制在255个以内！',1100);
+				     }
+			     }
+		     }
+		     });
+	     }
+     }
+</script>
+</body>
+</html>

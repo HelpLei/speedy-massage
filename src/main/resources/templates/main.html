@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <head th:include="include :: header"></head>
+    <title>控制台</title>
+
+    <style>
+        body{
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            background-color: #F4F9FD;
+        }
+        .wrap{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: space-around
+        }
+        .content{
+            width: 28%;
+            height: 20em;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-left: 2.5%;
+            margin-top: 2%;
+        }
+         .contentAll{
+            width: 50%;
+            height: 20em;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-left: 25%;
+            margin-top: 2%;
+        }
+        .content_top{
+            width: 100%;
+            height: 25%;
+            background-color: #FBA835;
+            border-radius: 5px 5px 0 0 ;
+        }
+        .num{
+            text-align: right;
+            margin: 0 30% 0 0;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+        .tit{
+            margin: 0 0 0 0%;
+            font-size: 2.0rem;
+            color: #fff;
+            text-align: center;
+            padding-top: 4%;
+        }
+        .content_list > p{
+            margin-left: 40%;
+            margin-top: 3.0rem;
+            margin-bottom: 2rem;
+            color: #3A79B0;
+            font-weight: bold;
+             font-size: 2.0rem;
+        }
+         .content_list8 > p{
+            margin-left: 40%;
+            margin-top: 6.0rem;
+            margin-bottom: 2rem;
+            color: #3A79B0;
+            font-weight: bold;
+             font-size: 3.0rem;
+        }
+        .content_list_s>p{
+            color: #3A79B0;
+            height: 2em;
+            font-weight: bold;
+        }
+        #opening11::-webkit-scrollbar {display: none;}
+    </style>
+</head>
+<body style="height: 70%;background-color: lightgrey;" >
+
+
+ <div class="wrap" id="rrapp">
+
+    <div class="contentAll" id="content">
+        <div class="content_top" id="contentTop">
+            <p class="tit">人力管理</p>
+        </div>
+        <div class="content_list8" id="opening">
+            <p onclick="renyuan()">人员管理查看 </p>
+        </div>
+    </div>
+
+     <div class="content" id="content4">
+        <div class="content_top" id="contentTop4" style="background-color: #C662E6">
+            <p class="tit">人力消息</p>
+        </div>
+        <div class="content_list" id="opening4">
+            <p  onclick="jiating()">家庭成员 </p>
+            <p onclick="xueli()">学历管理 </p>
+        </div>
+    </div>
+      <div class="content" id="content4">
+        <div class="content_top" id="contentTop4" style="background-color: #C662E6">
+            <p class="tit">人力消息</p>
+        </div>
+        <div class="content_list" id="opening4">
+             <p onclick="gongzuo()">工作管理</p>
+            <p onclick="dangji()">党籍管理 </p>
+        </div>
+    </div>
+     <div class="content" id="content4">
+        <div class="content_top" id="contentTop4" style="background-color: #C662E6">
+            <p class="tit">人力消息</p>
+        </div>
+        <div class="content_list" id="opening4">
+             <p onclick="jiangcheng()">奖惩管理</p>
+            <p onclick="kaohe()">考核管理 </p>
+        </div>
+    </div>
+</div> 
+
+<div th:include="include :: footer"></div>
+
+<script>
+
+
+</script>
+<script type="text/javascript" src="/js/appjs/phry/main.js">
+
+	</script>
+</body>
+</html>

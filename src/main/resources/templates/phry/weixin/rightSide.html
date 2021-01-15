@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <style>
+
+        p a:link { color: #73a2b7;text-decoration:none;}
+        p a:active{color: red; }
+        p a:visited { color: #73a2b7;text-decoration:none;}
+    </style>
+</head>
+<body>
+    <header><!-- dmleaveinfo -->
+        <a class="backprev" href="javascript:history.back(-1);">
+            <i class="mdui-icon material-icons">&#xe314;</i>
+        </a>
+        <div class="head-middle">诚益通</div>
+        <div class="head-right">
+            <button class="mdui-btn app-btn" mdui-drawer="{target: '#left-drawer'}"><i class="mdui-icon material-icons">&#xe5d3;</i></button>
+            <div class="mdui-drawer mdui-drawer-right mdui-drawer-close" id="left-drawer">
+                <p class="list_title"><a href="../weixin/index" >首页</a>&nbsp;&nbsp;<span id="user_name"></span></p>
+                <ul class="mdui-list app-slide-menu app-collapse-menu" mdui-collapse="{accordion: true}">
+
+
+                    #if($shiro.hasPermission("weixin:sale"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="sale()">
+                                销售订单
+                            </div>
+                        </div>
+                    </li>
+                    #end
+
+                    #if($shiro.hasPermission("weixin:buyingrequisition"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="buyingrequisition()">
+                                请购单管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:purchasing"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="purchasing()">
+                                采购单管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+
+                    #if($shiro.hasPermission("weixin:productionorder"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="productionorder()">
+                                生产单管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+
+                    #if($shiro.hasPermission("weixin:rawstorein"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="rawstorein()">
+                                原材料入库单
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:rawstoreout"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="rawstoreout()">
+                                原材料出库单
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:stockOM"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="stockOM()">
+                                原材料库存管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:storein"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="storein()">
+                                产品入库单管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:storeout"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="storeout()">
+                                产品出库单管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:stock"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="stock()">
+                                产品库存管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:stocking"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="stocking()">
+                                盘点单管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:qtstorein"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="qtstorein()">
+                                其他入库单管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:qtstoreout"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="qtstoreout()">
+                                其他出库单管理
+                            </div>
+                        </div>
+                    </li>
+                    #end
+                    #if($shiro.hasPermission("weixin:equipmentrepair"))
+                    <li class="mdui-collapse-item  app-hide-list  app-collapse-list">
+                        <div class="mdui-collapse-item-header mdui-list-item mdui-ripple  mdui-p-x-0">
+                            <div class="mdui-list-item-content mdui-text-left" onClick="equipming()">
+                                设备检修单
+                            </div>
+                        </div>
+                    </li>
+                    #end
+
+
+
+                </ul>
+                <div style="width:100%;height:60px;margin-top:30px;"><button class="secede" onclick="logout();">退出系统</button></div>
+            </div>
+        </div>
+    </header>
+
+<script src="${rc.contextPath}/statics/libs/bootstrap.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/vue.min.js"></script>
+<script src="${rc.contextPath}/statics/plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="${rc.contextPath}/statics/plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="${rc.contextPath}/statics/plugins/ztree/jquery.ztree.all.min.js"></script>
+<script src="${rc.contextPath}/statics/weixin/js/mdui.js"></script>
+<script>
+    function buyingrequisition(){
+        location.href="${rc.contextPath}/weixin/message/listhtml?str=buyingrequisition";
+    }
+
+    function purchasing(){
+        location.href="${rc.contextPath}/weixin/purchase";
+    }
+    function rawstorein(){
+        location.href="${rc.contextPath}/weixin/rawstorein";
+    }
+
+    function rawstoreout(){
+        location.href="${rc.contextPath}/weixin/rawstoreout";
+    }
+
+    function stockOM(){
+        location.href="${rc.contextPath}/weixin/stockOM";
+    }
+
+    function storein(){
+        location.href="${rc.contextPath}/weixin/storein";
+    }
+    
+    function storeout(){
+        location.href="${rc.contextPath}/weixin/storeout";
+    }
+    
+    function stock(){
+        location.href="${rc.contextPath}/weixin/stock";
+    }
+    
+    function stocking(){
+        location.href="${rc.contextPath}/weixin/stocking";
+    }
+
+    function qtstorein(){
+        location.href="${rc.contextPath}/weixin/qtstorein";
+    }
+    
+    function qtstoreout(){
+        location.href="${rc.contextPath}/weixin/qtstoreout";
+    }
+    function sale(){
+        location.href="${rc.contextPath}/weixin/sale";
+    }
+    function productionorder(){
+        location.href="${rc.contextPath}/weixin/productionorder";
+    }
+    function equipming(){
+        location.href="${rc.contextPath}/weixin/equipmentrepair";
+    }
+
+    $.ajax({
+        url:"${rc.contextPath}/sys/user/info/username",
+        success:function(r){
+            var data = eval("("+r+")");
+            $("#user_name").append(data.username);
+        }
+    })
+
+    function logout(){
+        location.href="${rc.contextPath}/weixin/logout";
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>诚益通综合管理系统</title>
+
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/mdui.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/app.css" />
+
+</head>
+<body>
+
+<!--侧边菜单栏 -->
+<div id="rightSide" ></div>
+
+<content>
+    <div class="con_list">
+        <div class="con_top">设备检修单</div>
+        <form>
+            <input class="search show" type="search" id="search" placeholder="检修单号/设备编码/设备名称" onchange="searchlist()"/>
+            <img src="${rc.contextPath}/statics/weixin/images/search.png">
+        </form>
+        <div class="info_list" id="dataDiv">
+            <ul id="dataUrl">
+
+            </ul>
+        </div>
+    </div>
+</content>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
+<script>
+
+    //侧边栏
+    $("#rightSide").load("${rc.contextPath}/weixin/rightSide");
+
+    //ajax加载列表数据
+    $.ajax({
+        url:"${rc.contextPath}/weixin/list",
+        data:{
+            page : 1,
+            limit : 10,
+            str : "equipmentrepair"
+        },
+        success:function(r){
+            var data = eval("("+r+")");
+            if(data.code == 0){
+                var infos = data.page.list;
+                var haveData = '';
+                if(data.if_have_data == 0){
+                    haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                }else if(data.if_have_data == 1){
+                    haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                }
+
+                if(infos == null || infos == ''){
+                    haveData = '<div class="js-load-more" id="noMore" >暂无数据</div>';
+                    $("#dataDiv").after(
+                        haveData
+                    )
+                }else{
+                    for(var i=0;i<infos.length;i++){
+                        var info = infos[i];
+
+                        var infostatus = '';
+
+
+
+
+
+                        if(info.statue == 0){
+                            infostatus = '<span class="yellow">开立</span>';
+                        }else if(info.statue == 1){
+                            infostatus = '<span class="green">审核通过</span>';
+                        }else if(info.statue == 2){
+                            infostatus = '<span class="red">审核不通过</span>';
+                        }else if(info.statue == 3){
+                            infostatus = '<span class="purple">零配件不足</span>';
+                        }else if(info.statue == 4){
+                            infostatus = '<span class="dark-blue">已生成请购单</span>';
+                        }else if(info.statue == 5){
+                            infostatus = '<span class="dark-blue">已采购</span>';
+                        }else if(info.statue == 6){
+                            infostatus = '<span class="dark-blue">已出库</span>';
+                        }else if(info.statue == 7){
+                            infostatus = '<span class="dark-blue">已检修</span>';
+                        }else if(info.statue == 8){
+                            infostatus = '<span class="dark-blue">全部发货</span>';
+                        }
+
+                        else{
+                            infostatus = '<span class="yellow">开立</span>';
+                        }
+
+                        $("#dataUrl").append(
+                            '<li>'+
+                            '<div class="list_box" onclick="detail('+info.id+')" >'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">'+info.orderNo+'</div>'+
+                            '<div class="info_list_f_r">创建人：'+info.creatUser+'</div>'+
+                            '</div>'+
+                            '<div class="info_list_f">'+
+
+                            '</div>'+
+                            '<div class="info_list_s">'+
+                            '<div class="info_list_s_l">创建时间：'+info.creatTime+'</div>'+
+                            '<div class="info_list_s_r">'+infostatus+'</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</li>'
+                        )
+                    }
+                    $("#dataDiv").after(
+                        haveData+
+                        '<span id="pageSpan">'+
+                        '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'+
+                        '</span>'
+                    )
+                }
+            }
+        }
+    })
+
+    //根据搜索内容查询列表数据
+    function searchlist(){
+        var username = $("#search").val();
+        $.ajax({
+            url:"${rc.contextPath}/weixin/list",
+            data:{
+                page : 1,
+                limit : 10,
+                username : username,
+                str : "equipmentrepair"
+            },
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var infos = data.page.list;
+                    $("#dataUrl").empty();
+                    $("#loadMore").remove();
+                    $("#haveLoadMore").remove();
+                    $("#noMore").remove();
+                    var haveData = '';
+                    if(data.if_have_data == 0){
+                        haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                    }else if(data.if_have_data == 1){
+                        haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                    }
+                    if(infos == null || infos == ''){
+                        haveData = '<div class="js-load-more" id="noMore" >暂无数据</div>';
+                        $("#dataDiv").after(
+                            haveData
+                        )
+                    }else{
+                        for(var i=0;i<infos.length;i++){
+                            var info = infos[i];
+
+                            var infostatus = '';
+
+
+
+                            if(info.statue == 0){
+                                infostatus = '<span class="yellow">开立</span>';
+                            }else if(info.statue == 1){
+                                infostatus = '<span class="green">审核通过</span>';
+                            }else if(info.statue == 2){
+                                infostatus = '<span class="red">审核不通过</span>';
+                            }else if(info.statue == 3){
+                                infostatus = '<span class="purple">零配件不足</span>';
+                            }else if(info.statue == 4){
+                                infostatus = '<span class="dark-blue">已生成请购单</span>';
+                            }else if(info.statue == 5){
+                                infostatus = '<span class="dark-blue">已采购</span>';
+                            }else if(info.statue == 6){
+                                infostatus = '<span class="dark-blue">已出库</span>';
+                            }else if(info.statue == 7){
+                                infostatus = '<span class="dark-blue">已检修</span>';
+                            }else if(info.statue == 8){
+                                infostatus = '<span class="dark-blue">全部发货</span>';
+                            }
+
+                            else{
+                                infostatus = '<span class="yellow">开立</span>';
+                            }
+
+                            $("#dataUrl").append(
+                                '<li>'+
+                                '<div class="list_box" onclick="detail('+info.id+')" >'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">'+info.orderNo+'</div>'+
+                                '<div class="info_list_f_r">创建人：'+info.creatUser+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+
+                                '</div>'+
+                                '<div class="info_list_s">'+
+                                '<div class="info_list_s_l">创建时间：'+info.creatTime+'</div>'+
+                                '<div class="info_list_s_r">'+infostatus+'</div>'+
+                                '</div>'+
+                                '</div>'+
+                                '</li>'
+                            )
+                        }
+                        $("#dataDiv").after(
+                            haveData+
+                            '<span id="pageSpan">'+
+                            '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'+
+                            '</span>'
+                        )
+                    }
+                }
+            }
+        })
+    }
+
+    //点击加载更多
+    function loadMore(){
+        var username = $("#search").val();
+        var page = $("#currPage").val();
+        $.ajax({
+            url:"${rc.contextPath}/weixin/list",
+            data:{
+                page : parseInt(page)+1,
+                limit : 10,
+                username : username,
+                str : "equipmentrepair"
+            },
+            success:function(r){
+                var data = eval("("+r+")");
+
+                if(data.code == 0){
+                    var infos = data.page.list;
+                    for(var i=0;i<infos.length;i++){
+                        var info = infos[i];
+
+                        var infostatus = '';
+
+                        if(info.statue == 0){
+                            infostatus = '<span class="yellow">开立</span>';
+                        }else if(info.statue == 1){
+                            infostatus = '<span class="green">审核通过</span>';
+                        }else if(info.statue == 2){
+                            infostatus = '<span class="red">审核不通过</span>';
+                        }else if(info.statue == 3){
+                            infostatus = '<span class="purple">零配件不足</span>';
+                        }else if(info.statue == 4){
+                            infostatus = '<span class="dark-blue">已生成请购单</span>';
+                        }else if(info.statue == 5){
+                            infostatus = '<span class="dark-blue">已采购</span>';
+                        }else if(info.statue == 6){
+                            infostatus = '<span class="dark-blue">已出库</span>';
+                        }else if(info.statue == 7){
+                            infostatus = '<span class="dark-blue">已检修</span>';
+                        }else if(info.statue == 8){
+                            infostatus = '<span class="dark-blue">全部发货</span>';
+                        }
+
+                        else{
+                            infostatus = '<span class="yellow">开立</span>';
+                        }
+
+                        $("#dataUrl").append(
+                            '<li>'+
+                            '<div class="list_box" onclick="detail('+info.id+')" >'+
+                            '<div class="info_list_f">'+
+                            '<div class="info_list_f_l">'+info.orderNo+'</div>'+
+                            '<div class="info_list_f_r">创建人：'+info.creatUser+'</div>'+
+                            '</div>'+
+                            '<div class="info_list_f">'+
+
+                            '</div>'+
+                            '<div class="info_list_s">'+
+                            '<div class="info_list_s_l">创建时间：'+info.creatTime+'</div>'+
+                            '<div class="info_list_s_r">'+infostatus+'</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</li>'
+                        )
+                    }
+                    $("#loadMore").remove();
+                    var haveData = '';
+                    if(data.if_have_data == 0){
+                        haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                    }else if(data.if_have_data == 1){
+                        haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                    }
+
+                    $("#dataDiv").after(
+                        haveData
+                    )
+                    $("#pageSpan").empty();
+                    $("#pageSpan").append(
+                        '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'
+                    );
+                }
+            }
+        })
+    }
+
+    //进入详情页面
+    function detail(id){
+        location.href='${rc.contextPath}/weixin/detailhtml?id='+id+'&str=equipmentrepair';
+    }
+
+</script>
+
+</body>
+</html>

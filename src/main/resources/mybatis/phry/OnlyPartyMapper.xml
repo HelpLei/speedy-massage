@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.dao.OnlyPartyDao">
+
+	<select id="get" resultType="com.bootdo.phry.domain.OnlyPartyDO">
+		select *  from ph_only_party where party_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.phry.domain.OnlyPartyDO">
+		select * from ph_only_party
+        <where>  
+		  		 
+		  		  <if test="card != null and card != ''"> and card =#{name}</if>
+		  		  <if test="deptId != null and deptId != ''"> and dept_id =#{deptId}</if>
+		  		   and status = 1 
+		  		</where>
+		  		
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by party_id asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="searchFile" resultType="com.bootdo.phry.domain.OnlyPartyDO">
+SELECT GROUP_CONCAT(party_file_id) AS partyFileId FROM ph_only_party WHERE user_id=#{value} GROUP BY user_id 
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ph_only_party
+		  <where>  
+		  		   <if test="name != null and name != ''"> and card =#{name}</if>
+		  		  <if test="deptId != null and deptId != ''"> and dept_id =#{deptId}</if>
+		  		   and status = 1 
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.phry.domain.OnlyPartyDO">
+		insert into ph_only_party
+		(
+			`user_id`, 
+			`party_enter_time`, 
+			`party_file_id`, 
+			`create_time`, 
+			`update_time`, 
+			`status`,
+			`name`,
+			`card`,
+			`phone_id`,
+			`dept_id`,
+			 shouji
+		)
+		values
+		(
+			#{userId}, 
+			#{partyEnterTime}, 
+			#{partyFileId}, 
+			#{createTime}, 
+			#{updateTime}, 
+			#{status},
+			#{name},
+			#{card},
+			#{phoneId},
+			#{deptId},
+			#{shouji}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.phry.domain.OnlyPartyDO">
+		update ph_only_party 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="partyEnterTime != null">`party_enter_time` = #{partyEnterTime}, </if>
+			<if test="partyFileId != null">`party_file_id` = #{partyFileId}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}, </if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="card != null">`card` = #{card},</if>
+			<if test="deptId != null">`dept_id` = #{deptId},</if>
+			<if test="shouji != null">`shouji` = #{shouji},</if>
+			<if test="phoneId != null">`phone_id` = #{phoneId},</if>
+			<if test="name != null">`name` = #{name}</if>
+		</set>
+		where party_id = #{partyId}
+	</update>
+	
+	<delete id="remove">
+		delete from ph_only_party where party_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ph_only_party where party_id in 
+		<foreach item="partyId" collection="array" open="(" separator="," close=")">
+			#{partyId}
+		</foreach>
+	</delete>
+
+</mapper>

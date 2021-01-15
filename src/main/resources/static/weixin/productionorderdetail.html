@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>诚益通综合管理系统</title>
+
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/mdui.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/app.css" />
+    <link rel="stylesheet" href="${rc.contextPath}/statics/weixin/css/dialog.css" />
+
+</head>
+<body>
+
+<!--侧边菜单栏 -->
+<div id="rightSide" ></div>
+
+<content>
+    <div class="con_list">
+        <div class="con_top">生产单</div>
+        <div class="info_list">
+            <div class="list-form">
+                <input type="hidden" id="productionOrderId" value="${id}" >
+                <div class="list-form-row">
+                    <p class="list-form-addon">生产单号：<span>${info.orderNO}</span></p>
+                    <p class="list-form-addon">销售单号：<span>${info.saleOrder}</span></p>
+                    <p class="list-form-addon">客户简称：<span>${info.clientName}</span></p>
+                    <p class="list-form-addon">产品名称：<span>${info.productName}</span></p>
+                    <p class="list-form-addon">图号：<span>${info.figureNumber}</span></p>
+                    <p class="list-form-addon">下单数量：<span>${info.saleSum}</span></p>
+                    <p class="list-form-addon">计划交货日期：<span>${info.deliveryPlanDate}</span></p>
+                    <p class="list-form-addon">单位：<span>${info.materialQuality}</span></p>
+                    <p class="list-form-addon">产品库存：<span>${info.stockSum}</span></p>
+                    <p class="list-form-addon">排产数量：<span>${info.sum}</span></p>
+                    <p class="list-form-addon">腊型计划时间：<span>${info.lxDatePlan}</span></p>
+                    <p class="list-form-addon">腊型完成时间：<span>${info.lxDate}</span></p>
+                    <p class="list-form-addon">制壳计划时间：<span>${info.zkDatePlan}</span></p>
+                    <p class="list-form-addon">制壳完成时间：<span>${info.zkDate}</span></p>
+                    <p class="list-form-addon">熔炼计划时间：<span>${info.rlDatePlan}</span></p>
+                    <p class="list-form-addon">熔炼完成时间：<span>${info.rlDate}</span></p>
+                    <p class="list-form-addon">计划出库时间：<span>${info.planOutDate}</span></p>
+                    <p class="list-form-addon">实际出库时间：<span>${info.outDate}</span></p>
+                    <p class="list-form-addon">加工计划交期：<span>${info.jgDatePlan}</span></p>
+                    <p class="list-form-addon">加工实际交期：<span>${info.jgDate}</span></p>
+                    <p class="list-form-addon">生产单状态：<span>${info.statueStr}</span></p>
+                    <p class="list-form-addon">备注：${info.remark}</p>
+                </div>
+
+                <div style="width:100%;overflow: hidden;">
+                    #if($shiro.hasPermission("weixin:productionorderexamine"))
+                    <input type="button" class="button" style="margin: 1rem 30%;" id="stateone" title="审核" value="审核" />
+                    #end
+                    <!--#if($shiro.hasPermission("weixin:productionordercout"))
+                    <input type="button" class="button" style="margin: 1rem 30%;" id="statethree" title="生成出库单" value="生成出库单" />
+                    #end-->
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</content>
+<script type="text/javascript" src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
+<script type="text/javascript" src="${rc.contextPath}/statics/weixin/js/mDialogMin.js"></script>
+<script>
+    //权限判断
+    var one = false;
+    if($shiro.hasPermission("weixin:productionorderexamine")){
+        one = true;
+    }
+
+    var three = false;
+    if($shiro.hasPermission("weixin:productionordercout")){
+        three = true;
+    }
+
+
+    var productionOrderId = $("#productionOrderId").val();
+
+    $(function(){
+        //侧边栏
+        $("#rightSide").load("${rc.contextPath}/weixin/rightSide");
+    })
+
+
+
+    //刷新本页面
+    function reload(){
+        location.href='${rc.contextPath}/weixin/detailhtml?id='+productionOrderId+'&str=productionorder';
+    }
+
+    //ajax加载列表数据
+    function reloadlist(){
+
+        $.ajax({
+            url:"${rc.contextPath}/weixin/list",
+            data:{
+                page : 1,
+                limit : 10,
+                str : "productionorder"
+            },
+            success:function(r){
+                var data = eval("("+r+")");
+                if(data.code == 0){
+                    var infos = data.page.list;
+                    var haveData = '';
+                    if(data.if_have_data == 0){
+                        haveData = '<div class="js-load-more" id="loadMore" onclick="loadMore()">点击加载更多</div>';
+                    }else if(data.if_have_data == 1){
+                        haveData = '<div class="js-load-nomore" id="haveLoadMore">数据已完全加载</div>';
+                    }
+
+                    if(infos == null || infos == ''){
+                        haveData = '<div class="js-load-more" id="noMore" >暂无数据</div>';
+                        $("#dataDiv").after(
+                            haveData
+                        )
+                    }else{
+                        for(var i=0;i<infos.length;i++){
+                            var info = infos[i];
+
+                            var infostatus = '';
+
+                            if(info.orderNO == null){
+                                info.orderNO = "无";
+                            }
+                            var creatTime = "";
+                            if(info.creatTime == null){
+                                info.creatTime = "";
+                            }else{
+                                creatTime =info.creatTime.substring(0,10);
+                            }
+
+                            if(info.saleOrder==null||info.saleOrder==""){
+                                info.saleOrder="无";
+                            }
+
+                            if(info.clientName == null||info.clientName ==""){
+                                info.clientName = "无";
+                            }else{
+                                if(info.clientName.length>15){
+                                    info.clientName =info.clientName.substring(0,15);
+                                }
+                            }
+
+
+                            if(info.statue == 0){
+                                infostatus = '<span class="yellow">开立</span>';
+                            }else if(info.statue == 11){
+                                infostatus = '<span class="red">审核不通过</span>';
+                            }else if(info.statue == 10){
+                                infostatus = '<span class="green">审核通过</span>';
+                            }else if(info.statue == 12){
+                                infostatus = '<span class="green">出库中</span>';
+                            }else if(info.statue == 13){
+                                infostatus = '<span class="green">已出库</span>';
+                            }else if(info.statue == 1){
+                                infostatus = '<span class="green">腊型完成</span>';
+                            }else if(info.statue == 2){
+                                infostatus = '<span class="green">制壳完成</span>';
+                            }else if(info.statue == 3){
+                                infostatus = '<span class="green">熔炼完成</span>';
+                            }else if(info.statue == 4){
+                                infostatus = '<span class="green">生产完成</span>';
+                            }else if(info.statue == 5){
+                                infostatus = '<span class="green">已入库</span>';
+                            }else{
+                                infostatus = '<span class="yellow">开立</span>';
+                            }
+
+                            $("#dataUrl").append(
+                                '<li>'+
+                                '<div class="list_box" onclick="detail('+info.id+')" >'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">'+info.orderNO+'</div>'+
+                                '<div class="info_list_f_r">销售单号：'+info.saleOrder+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_f">'+
+                                '<div class="info_list_f_l">客户简称：'+info.clientName+'</div>'+
+                                '</div>'+
+                                '<div class="info_list_s">'+
+                                '<div class="info_list_s_l">创建时间：'+creatTime+'</div>'+
+                                '<div class="info_list_s_r">'+infostatus+'</div>'+
+                                '</div>'+
+                                '</div>'+
+                                '</li>'
+                            )
+                        }
+                        $("#dataDiv").after(
+                            haveData+
+                            '<span id="pageSpan">'+
+                            '<input type="hidden" id="currPage" value="'+data.page.currPage+'" >'+
+                            '</span>'
+                        )
+                    }
+                }
+            }
+        })
+    }
+
+
+    if(one){
+        stateone.onclick = function(){
+
+            if("${info.statueStr}".indexOf('开立') < 0){
+                Dialog.init('您好！请对"开立"状态的数据进行审核！');
+                return ;
+            }
+            Dialog.init('',{
+                title : '立即审核',
+                button : {
+                    审核通过 : function(){
+                        $.ajax({
+                            url: "${rc.contextPath}/weixin/productionorder/examine",
+                            data: {
+                                id : productionOrderId,
+                                examineStatus : 10,
+                                examineRemark : "审核通过"
+                            },
+                            success: function(r){
+                                var data = eval("("+r+")");
+
+                                if(data.code == 0){
+                                    Dialog.init("操作成功！");
+                                    reloadlist();
+                                    reload();
+
+                                }else{
+                                    Dialog.init("操作失败，请重试！");
+                                    Dialog.close(this);
+                                }
+                            }
+                        })
+                    },
+                    不通过 : function(){
+                        $.ajax({
+                            url: "${rc.contextPath}/weixin/productionorder/examine",
+                            data: {
+                                id : productionOrderId,
+                                examineStatus : 11,
+                                examineRemark : "审核不通过"
+                            },
+                            success: function(r){
+                                var data = eval("("+r+")");
+                                if(data.code == 0){
+                                    Dialog.init("操作成功！");
+                                    reloadlist();
+                                    reload();
+
+                                }else{
+                                    Dialog.init("操作失败，请重试！");
+                                    Dialog.close(this);
+                                }
+                            }
+                        })
+                    }
+                }
+            });
+
+
+            /*Dialog.init('<input type="text" placeholder="请输入意见"  style="margin:8px 0;width:100%;padding:11px 8px;font-size:15px; border:1px solid #999;"/>',{
+                title : '立即审核',
+                button : {
+                    审核通过 : function(){
+                        var examineRemark = this.querySelector('input').value;
+                        if(examineRemark.length < 255){
+                            $.ajax({
+                                url: "${rc.contextPath}/weixin/productionorder/examine",
+                                data: {
+                                    id : productionOrderId,
+                                    examineStatus : 10,
+                                    examineRemark : examineRemark==null?"":examineRemark
+                                },
+                                success: function(r){
+                                    var data = eval("("+r+")");
+
+                                    if(data.code == 0){
+                                        Dialog.init("操作成功！");
+                                        reloadlist();
+                                        reload();
+
+                                    }else{
+                                        Dialog.init("操作失败，请重试！");
+                                        Dialog.close(this);
+                                    }
+                                }
+                            })
+                        }else{
+                            Dialog.init('请把字数控制在255个以内！',1100);
+                        }
+                    },
+                    不通过 : function(){
+                        var examineRemark = this.querySelector('input').value;
+                        if(examineRemark.length < 255){
+                            $.ajax({
+                                url: "${rc.contextPath}/weixin/productionorder/examine",
+                                data: {
+                                    id : productionOrderId,
+                                    examineStatus : 11,
+                                    examineRemark : examineRemark==null?"":examineRemark
+                                },
+                                success: function(r){
+                                    var data = eval("("+r+")");
+                                    if(data.code == 0){
+                                        Dialog.init("操作成功！");
+                                        reloadlist();
+                                        reload();
+
+                                    }else{
+                                        Dialog.init("操作失败，请重试！");
+                                        Dialog.close(this);
+                                    }
+                                }
+                            })
+                        }else{
+                            Dialog.init('请把字数控制在255个以内！',1100);
+                        }
+                    }
+                }
+            });*/
+        }
+    }
+
+    /*if(three){
+        statethree.onclick = function(){
+
+            if("${info.statueStr}".indexOf('审核通过') < 0){
+                Dialog.init('您好！请选择审核通过的进行生成！');
+                return ;
+            }
+
+
+            Dialog.init('',{
+                title : '生成出库单',
+                button : {
+                    确定 : function(){
+                        $.ajax({
+                            url:"${rc.contextPath}/weixin/productionorder/createOut",
+                            data:{id:productionOrderId},
+                            success: function(r){
+                                var data = eval("("+r+")");
+                                if(data.code == 0){
+                                    Dialog.init("操作成功！");
+                                    reloadlist();
+                                    reload();
+                                }else{
+                                    Dialog.init("操作失败，请重试！");
+                                    Dialog.close(this);
+                                }
+                            }
+
+
+                        });
+                    },
+                    取消 : function(){
+                        Dialog.close(this);
+                    }
+                }
+            });
+        }
+    }*/
+
+</script>
+</body>
+</html>

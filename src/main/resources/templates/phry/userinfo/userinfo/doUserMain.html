@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<style>
+	.itemStyle{
+		height: 150px;
+		text-align: center;
+		font-size: 24px;
+		cursor: pointer;
+	}
+	.itemStyle a{
+		width: 200px;
+		height: 100px;
+		line-height: 100px;
+		border: 1px solid;
+		display: inline-block;
+	}
+	.itemStyle a:hover, .itemStyle a:active{
+		text-decoration: underline;
+	}
+</style>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12" style="height: 600px;min-height: 600px;text-align: center;margin: 200px 0px;">
+
+				<input id="userId" name="userId" th:value="${userId}"  type="hidden">
+				<div class="row">
+					<div class="col-sm-6 itemStyle">
+						<a style="color: #5dd2b7" data-index="/phry/family/add" data-title="家庭成员">家庭成员</a>
+					</div>
+					<div class="col-sm-6 itemStyle">
+						<a style="color: #db6868" data-index="/phry/education/add" data-title="学历">学&#12288;&#12288;历</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6 itemStyle">
+						<a style="color: #c97333" data-index="/phry/party/add" data-title="党籍">党&#12288;&#12288;籍</a>
+					</div>
+					<div class="col-sm-6 itemStyle">
+						<a style="color: #7fc1e6" data-index="/phry/workHistory/add" data-title="工作经历">工作经历</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6 itemStyle">
+						<a style="color: #5dd2b7" data-index="/phry/rewards/add" data-title="奖惩">奖惩情况</a>
+					</div>
+					<div class="col-sm-6 itemStyle">
+						<a style="color: #db6868" data-index="/phry/check/add" data-title="考核">年度考核</a>
+					</div>
+				</div>
+				 <div class="row">
+					<div class="col-sm-6 itemStyle">
+						<a style="color: #5dd2b7" data-index="/phry/personFile/add" data-title="有关个人事项报表">有关个人事项报表</a>
+					</div>
+					<div class="col-sm-6 itemStyle">
+						<a style="color: #db6868" data-index="/phry/personFile/addOther" data-title="其它">其&#12288;&#12288;它</a>
+					</div>
+				</div> 
+
+
+				<!--<div class="ibox float-e-margins">-->
+					<!--<div class="ibox-content">-->
+						<!--<form class="form-horizontal m-t" id="signupForm">-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">头像：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input type="hidden" id="picId" name="picId" value="/img/backg01.jpg" >-->
+									<!--<img id="showImg" src="/img/backg01.jpg" style="width: 100%;cursor: pointer;" >-->
+									<!--<input  type="file" class="hidden" id="file" name="file" onchange="uploadFile(this.files)" />-->
+								<!--</div>-->
+								<!--<script type="text/javascript">-->
+                                    <!--$("#showImg").click(function () {-->
+                                        <!--$("#file").click();-->
+                                    <!--});-->
+
+                                    <!--function uploadFile(files) {-->
+
+                                        <!--var type = files[0].type;-->
+                                        <!--if(type.indexOf("image") < 0){-->
+                                            <!--layer.msg('请上传图片格式...', {-->
+                                                <!--icon: 2-->
+                                            <!--});-->
+                                            <!--return false;-->
+                                        <!--}-->
+                                        <!--var size = files[0].size;-->
+                                        <!--if ((size / 1024 / 1024) > 2) {-->
+                                            <!--layer.msg('图片大小不能超过2M...', {-->
+                                                <!--icon: 2-->
+                                            <!--});-->
+                                            <!--return false;-->
+                                        <!--}-->
+                                        <!--console.log("size=" + size);-->
+                                        <!--var formData = new FormData();-->
+                                        <!--formData.append("file", files[0]);-->
+                                        <!--$.ajax({-->
+                                            <!--data: formData,-->
+                                            <!--type: "POST",-->
+                                            <!--url: "/common/sysFile/upload",    // 图片上传出来的url，返回的是图片上传后的路径，http格式-->
+                                            <!--cache: false,-->
+                                            <!--contentType: false,-->
+                                            <!--processData: false,-->
+                                            <!--dataType: "json",-->
+                                            <!--success: function (data) {//data是返回的hash,key之类的值，key是定义的文件名-->
+                                                <!--$("#showImg").attr("src", data.fileName);-->
+                                                <!--$("#picId").val(data.sysFileId);-->
+                                            <!--},-->
+                                            <!--error: function () {-->
+                                                <!--layer.msg('上传失败', {-->
+                                                    <!--icon: 2-->
+                                                <!--});-->
+                                            <!--}-->
+                                        <!--});-->
+                                    <!--}-->
+								<!--</script>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">	-->
+								<!--<label class="col-sm-3 control-label">姓名：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="username" name="username" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">手机号：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="mobile" name="mobile" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">性别：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<label class="radio-inline">-->
+										<!--<input type="radio" name="sex" value="1" checked /> 男-->
+									<!--</label>-->
+									<!--<label class="radio-inline">-->
+										<!--<input type="radio" name="sex" value="0" /> 女-->
+									<!--</label>-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">出身日期：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="birth" name="birth" readonly class="laydate-icon layer-date form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+														<!--&lt;!&ndash;<div class="form-group">	&ndash;&gt;-->
+								<!--&lt;!&ndash;<label class="col-sm-3 control-label">密码：</label>&ndash;&gt;-->
+								<!--&lt;!&ndash;<div class="col-sm-8">&ndash;&gt;-->
+									<!--&lt;!&ndash;<input id="password" name="password" class="form-control" type="text">&ndash;&gt;-->
+								<!--&lt;!&ndash;</div>&ndash;&gt;-->
+							<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">身份证号：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="idCard" name="idCard" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">民族：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="nation" name="nation" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">籍贯：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="natives" name="natives" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">出生地：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="birthPlace" name="birthPlace" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">健康状况：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="health" name="health" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">联系方式：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="contact" name="contact" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">现居住地：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="liveAddress" name="liveAddress" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group" style="display: none;">-->
+								<!--<label class="col-sm-3 control-label">1：系统用户2：录入人员：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<label class="radio-inline">-->
+										<!--<input type="radio" name="isOwner" value="1" /> 系统用户-->
+									<!--</label>-->
+									<!--<label class="radio-inline">-->
+										<!--<input type="radio" name="isOwner" value="2" checked /> 录入人员-->
+									<!--</label>-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">所属部门：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="deptId" name="deptId" class="hidden">-->
+									<!--<input id="deptName" name="deptName" class="form-control" type="text" style="cursor: pointer;" onclick="openDept()"-->
+										<!--readonly="readonly" placeholder="所属部门">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<!--<div class="form-group">-->
+								<!--<div class="col-sm-8 col-sm-offset-3">-->
+									<!--<button type="submit" class="btn btn-primary">提交</button>-->
+								<!--</div>-->
+							<!--</div>-->
+						<!--</form>-->
+					<!--</div>-->
+				<!--</div>-->
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/phry/userinfo/add.js">
+	</script>
+	<script>
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#birth',
+                type: 'date',
+                range: false,
+                format: 'yyyy-M-d'
+            });
+        });
+        $(function(){
+            function alertT(item,title) {
+                layer.open({
+                    type : 2,
+                    title : title,
+                    maxmin : true,
+                    shadeClose : false, // 点击遮罩关闭层
+                    area : [ '100%', '100%' ],
+                    content : item+"/"+$("#userId").val() // iframe的url
+                });
+            };
+            $(".itemStyle a").click(function () {
+				var uri = $(this).data("index");
+				var title =  $(this).data("title");
+				alertT(uri,title);
+            });
+		});
+
+	</script>
+</body>
+</html>

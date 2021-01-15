@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+							<div class="form-group">
+								<input type="hidden" id="userId" name="userId" th:value="${userInfoDTO.userId}" >
+								<label class="col-sm-3 control-label">人员姓名：<span th:text="*{userInfoDTO.username}"></span></label>
+								<!--<div class="col-sm-8">-->
+									<!--<input type="hidden" id="userId" name="userId" th:value="${userInfoDTO.userId}" >-->
+									<!--<input id="username" disabled th:value="${userInfoDTO.username}"  name="username" class="form-control" type="text">-->
+								<!--</div>-->
+							</div>
+					</div>
+					<div class="ibox-content">
+						<table id="exampleTable2" data-mobile-responsive="true">
+						</table>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/phry/rewards/look.js">
+	</script>
+</body>
+</html>

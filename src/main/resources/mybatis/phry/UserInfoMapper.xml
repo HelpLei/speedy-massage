@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.dao.UserInfoDao">
+
+	<select id="get" resultType="com.bootdo.phry.domain.UserInfoDO">
+		select `user_id`,`username`,`mobile`,`password`,`id_card`,`nation`,`natives`,`birth_place`,`health`,worktime,worktomehere,`sex`,`contact`,`birth`,`live_address`,`is_owner`,`dept_id`,`status`,`user_id_create`,`pic_id`,`gmt_create`,`gmt_modified`,`file_id`,`age`,`personnel_category`,`education`,`allsort`,`department_sort`,file_number from sys_user where user_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.phry.domain.UserInfoDO">
+		 SELECT sy.*,GROUP_CONCAT(subject_name) as subjectName FROM sys_user sy 
+		 LEFT JOIN ph_education ed ON sy.user_id=ed.`user_id`
+        <where>  
+        
+          <if test="zhuanye != null and zhuanye != ''"> and ed.subject_name like concat('%',#{zhuanye},'%') </if>
+          
+			  <if test="userId != null and userId != ''"> and sy.user_id = #{userId} </if>
+			  <if test="username != null and username != ''"> and sy.username like concat('%',#{username},'%') </if>
+			  <if test="mobile != null and mobile != ''"> and sy.mobile like concat('%',#{mobile},'%') </if>
+			  <if test="password != null and password != ''"> and sy.password = #{password} </if>
+			  <if test="idCard != null and idCard != ''"> and sy.id_card = #{idCard} </if>
+			  <if test="nation != null and nation != ''"> and sy.nation = #{nation} </if>
+			  <if test="natives != null and natives != ''"> and sy.natives = #{natives} </if>
+			  <if test="birthPlace != null and birthPlace != ''"> and sy.birth_place = #{birthPlace} </if>
+			  <if test="health != null and health != ''"> and sy.health = #{health} </if>
+			  <if test="sex != null and sex != ''"> and sy.sex = #{sex} </if>
+			  <if test="contact != null and contact != ''"> and sy.contact = #{contact} </if>
+			  <if test="birth != null and birth != ''"> and sy.birth = #{birth} </if>
+			  <if test="liveAddress != null and liveAddress != ''"> and sy.live_address = #{liveAddress} </if>
+			  <if test="isOwner != null and isOwner != ''"> and sy.is_owner = #{isOwner} </if>
+			  <if test="deptId != null and deptId != ''"> and sy.dept_id = #{deptId} </if>
+			  <if test="status != null and status != ''"> and sy.status = #{status} </if>
+			  <if test="userIdCreate != null and userIdCreate != ''"> and sy.user_id_create = #{userIdCreate} </if>
+			  <if test="picId != null and picId != ''"> and sy.pic_id = #{picId} </if>
+			  <if test="personnelCategory != null and personnelCategory != ''"> and sy.personnel_category = #{personnelCategory} </if>
+			  <if test="education != null and education != ''"> and sy.education = #{education} </if>
+			  <if test="gmtCreate != null and gmtCreate != ''"> and sy.gmt_create = #{gmtCreate} </if>
+			  <if test="gmtModified != null and gmtModified != ''"> and sy.gmt_modified = #{gmtModified} </if>
+			  <if test="queryname != null and queryname.trim() != ''"> and sy.concat_ws (',',username,mobile,id_card) like concat('%',#{queryname},'%')</if>
+			  <if test="ageBegin != null and ageBegin != ''"> and sy.age  <![CDATA[>= ]]> #{ageBegin} </if>
+			  <if test="ageEnd != null and ageEnd != ''"> and sy.age  <![CDATA[<= ]]> #{ageEnd} </if>
+		</where>
+      
+             GROUP BY sy.user_id  ORDER BY sy.allsort ASC 
+       
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	<select id="getSortCount" resultType="int">
+		select count(*) from sys_user where allsort=#{value}
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) FROM (SELECT sy.*,GROUP_CONCAT(subject_name) as subjectName FROM sys_user sy 
+		 LEFT JOIN ph_education ed ON sy.user_id=ed.`user_id`
+		  <where>  
+		  <if test="zhuanye != null and zhuanye != ''"> and ed.subject_name like concat('%',#{zhuanye},'%') </if>
+          
+			  <if test="userId != null and userId != ''"> and sy.user_id = #{userId} </if>
+			  <if test="username != null and username != ''"> and sy.username like concat('%',#{username},'%') </if>
+			  <if test="mobile != null and mobile != ''"> and sy.mobile like concat('%',#{mobile},'%') </if>
+			  <if test="password != null and password != ''"> and sy.password = #{password} </if>
+			  <if test="idCard != null and idCard != ''"> and sy.id_card = #{idCard} </if>
+			  <if test="nation != null and nation != ''"> and sy.nation = #{nation} </if>
+			  <if test="natives != null and natives != ''"> and sy.natives = #{natives} </if>
+			  <if test="birthPlace != null and birthPlace != ''"> and sy.birth_place = #{birthPlace} </if>
+			  <if test="health != null and health != ''"> and sy.health = #{health} </if>
+			  <if test="sex != null and sex != ''"> and sy.sex = #{sex} </if>
+			  <if test="contact != null and contact != ''"> and sy.contact = #{contact} </if>
+			  <if test="birth != null and birth != ''"> and sy.birth = #{birth} </if>
+			  <if test="liveAddress != null and liveAddress != ''"> and sy.live_address = #{liveAddress} </if>
+			  <if test="isOwner != null and isOwner != ''"> and sy.is_owner = #{isOwner} </if>
+			  <if test="deptId != null and deptId != ''"> and sy.dept_id = #{deptId} </if>
+			  <if test="status != null and status != ''"> and sy.status = #{status} </if>
+			  <if test="userIdCreate != null and userIdCreate != ''"> and sy.user_id_create = #{userIdCreate} </if>
+			  <if test="picId != null and picId != ''"> and sy.pic_id = #{picId} </if>
+			   <if test="personnelCategory != null and personnelCategory != ''"> and sy.personnel_category = #{personnelCategory} </if>
+			      <if test="education != null and education != ''"> and sy.education = #{education} </if>
+			  <if test="gmtCreate != null and gmtCreate != ''"> and sy.gmt_create = #{gmtCreate} </if>
+			  <if test="gmtModified != null and gmtModified != ''"> and sy.gmt_modified = #{gmtModified} </if>
+			  <if test="queryname != null and queryname.trim() != ''"> and sy.concat_ws (',',username,mobile,id_card) like concat('%',#{queryname},'%')</if>
+			  <if test="ageBegin != null and ageBegin != ''"> and sy.age  <![CDATA[>= ]]> #{ageBegin} </if>
+			  <if test="ageEnd != null and ageEnd != ''"> and sy.age  <![CDATA[<= ]]> #{ageEnd} </if>
+			   </where>  
+		    GROUP BY sy.user_id )b
+	</select>
+	
+	<select id="listLocal" resultType="com.bootdo.phry.domain.UserInfoDO">
+		SELECT su.`username` ,su.`sex` ,su.`birth` ,su.`education` ,
+		su.worktime ,su.worktomehere ,su.personnel_category ,pwh.office_name as officeName,
+		pe.school_name as schoolName,pe.subject_name as subjectName,pwh.work_institution as workInstitution,pp.party_enter_time as partyEnterTime,
+		pwh.working_time as workingTime FROM sys_user  su
+		LEFT JOIN(SELECT t.* FROM `ph_work_history` t 
+		WHERE working_time = (SELECT MAX(working_time) FROM ph_work_history 
+		WHERE user_id = t.user_id) GROUP BY t.user_id ) pwh ON su.`user_id`=pwh.`user_id` 
+		LEFT JOIN (SELECT t.* FROM ph_education t 
+		WHERE graduation_time = (SELECT MAX(graduation_time) FROM ph_education 
+		WHERE user_id = t.user_id) GROUP BY t.user_id )pe ON su.`user_id`=pe.`user_id` 
+		LEFT JOIN `ph_party` pp ON pp.`user_id`=su.`user_id`
+        <where>  
+			  <if test="userId != null and userId != ''"> and su.user_id = #{userId} </if>
+			  <if test="username != null and username != ''"> and su.username like concat('%',#{username},'%') </if>
+			  <if test="mobile != null and mobile != ''"> and su.mobile like concat('%',#{mobile},'%') </if>
+			  <if test="password != null and password != ''"> and su.password = #{password} </if>
+			  <if test="idCard != null and idCard != ''"> and su.id_card = #{idCard} </if>
+			  <if test="nation != null and nation != ''"> and su.nation = #{nation} </if>
+			  <if test="natives != null and natives != ''"> and su.natives = #{natives} </if>
+			  <if test="birthPlace != null and birthPlace != ''"> and su.birth_place = #{birthPlace} </if>
+			  <if test="health != null and health != ''"> and su.health = #{health} </if>
+			  <if test="sex != null and sex != ''"> and su.sex = #{sex} </if>
+			  <if test="contact != null and contact != ''"> and su.contact = #{contact} </if>
+			  <if test="birth != null and birth != ''"> and su.birth = #{birth} </if>
+			  <if test="liveAddress != null and liveAddress != ''"> and su.live_address = #{liveAddress} </if>
+			  <if test="isOwner != null and isOwner != ''"> and su.is_owner = #{isOwner} </if>
+			  <if test="deptId != null and deptId != ''"> and su.dept_id = #{deptId} </if>
+			  <if test="status != null and status != ''"> and su.status = #{status} </if>
+			  <if test="userIdCreate != null and userIdCreate != ''"> and su.user_id_create = #{userIdCreate} </if>
+			  <if test="picId != null and picId != ''"> and su.pic_id = #{picId} </if>
+			  <if test="personnelCategory != null and personnelCategory != ''"> and su.personnel_category = #{personnelCategory} </if>
+			  <if test="education != null and education != ''"> and su.education = #{education} </if>
+			  <if test="gmtCreate != null and gmtCreate != ''"> and su.gmt_create = #{gmtCreate} </if>
+			  <if test="gmtModified != null and gmtModified != ''"> and su.gmt_modified = #{gmtModified} </if>
+			  <if test="queryname != null and queryname.trim() != ''"> and concat_ws (',',su.username,su.mobile,su.id_card) like concat('%',#{queryname},'%')</if>
+			  <if test="ageBegin != null and ageBegin != ''"> and su.age  <![CDATA[>= ]]> #{ageBegin} </if>
+			  <if test="ageEnd != null and ageEnd != ''"> and su.age  <![CDATA[<= ]]> #{ageEnd} </if>
+		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by su.allsort asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	
+	 <select id="listweixin" resultType="com.bootdo.phry.domain.UserInfoDO">
+		select `user_id`,`username`,`mobile`,`password`,`id_card`,`nation`,`natives`,`birth_place`,`health`,`sex`,`contact`,`birth`,`live_address`,`is_owner`,`dept_id`,`status`,`user_id_create`,`pic_id`,`gmt_create`,`gmt_modified`,`file_id`,`age` ,file_number from sys_user
+        <where>  
+			 <if test="username != null and username != ''">
+			   and concat_ws  (',',username,mobile,id_card) like concat('%',#{username},'%')
+			  </if>
+			  <if test="mobile != null and mobile != ''"> and mobile like concat('%',#{mobile},'%') </if>
+			  <if test="idCard != null and idCard != ''"> and id_card = #{idCard} </if>
+			      <if test="personnelCategory != null and personnelCategory != ''"> and personnel_category = #{personnelCategory} </if>
+			      <if test="education != null and education != ''"> and education = #{education} </if>
+			  <if test="deptName != null and deptName != ''">
+			   and dept_id = (select dept_id from `sys_dept` where `name`=#{deptName})
+			   </if>
+		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by  allsort asc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="countweixin" resultType="int">
+		select count(*) from sys_user
+		 <where>  
+			 <if test="username != null and username != ''">
+			   and concat_ws  (',',username,mobile,id_card) like concat('%',#{username},'%')
+			  </if>
+			  <if test="mobile != null and mobile != ''"> and mobile like concat('%',#{mobile},'%') </if>
+			  <if test="idCard != null and idCard != ''"> and id_card = #{idCard} </if>
+			      <if test="personnelCategory != null and personnelCategory != ''"> and personnel_category = #{personnelCategory} </if>
+			      <if test="education != null and education != ''"> and education = #{education} </if>
+			  <if test="deptName != null and deptName != ''">
+			   and dept_id = (select dept_id from `sys_dept` where `name`=#{deptName})
+			   </if>
+		</where>
+	</select>
+	 
+	 
+	 <select id="mancount" resultType="int">
+		select count(*) from sys_user where status=1 and sex=1
+	</select>
+
+ <select id="allcount" resultType="int">
+		select count(*) from sys_user 
+	</select>
+	
+	 <select id="partCount" resultType="int">
+		select count(*) from sys_user where dept_id=#{value}
+	</select>
+	
+	
+	  <select id="womancount" resultType="int">
+		select count(*) from sys_user where status=1 and sex=0
+	</select>
+
+	<insert id="save" parameterType="com.bootdo.phry.domain.UserInfoDO" useGeneratedKeys="true" keyProperty="userId">
+		insert into sys_user
+		(
+			`username`, 
+			`mobile`, 
+			`password`, 
+			`id_card`, 
+			`nation`, 
+			`natives`, 
+			`birth_place`, 
+			`health`, 
+			`sex`, 
+			`contact`, 
+			`birth`, 
+			`live_address`, 
+			`is_owner`, 
+			`dept_id`, 
+			`status`, 
+			`user_id_create`, 
+			`pic_id`, 
+			`gmt_create`, 
+			`gmt_modified`,
+			`age`,
+			`file_id`,
+			`personnel_category`,
+			`education`,
+			`allsort`,
+			`department_sort`,
+			`file_number`,
+			`worktime`,
+			`worktomehere`
+		)
+		values
+		(
+			#{username}, 
+			#{mobile}, 
+			#{password}, 
+			#{idCard}, 
+			#{nation}, 
+			#{natives}, 
+			#{birthPlace}, 
+			#{health}, 
+			#{sex}, 
+			#{contact}, 
+			#{birth}, 
+			#{liveAddress}, 
+			#{isOwner}, 
+			#{deptId}, 
+			#{status}, 
+			#{userIdCreate}, 
+			#{picId}, 
+			#{gmtCreate}, 
+			#{gmtModified},
+			#{age},
+			#{fileId},
+			#{personnelCategory},
+			#{education},
+			#{allsort},
+			#{departmentSort},
+			#{fileNumber},
+			#{worktime},
+			#{worktomehere}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.phry.domain.UserInfoDO">
+		update sys_user 
+		<set>
+			<if test="username != null">`username` = #{username}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="idCard != null">`id_card` = #{idCard}, </if>
+			<if test="nation != null">`nation` = #{nation}, </if>
+			<if test="natives != null">`natives` = #{natives}, </if>
+			<if test="birthPlace != null">`birth_place` = #{birthPlace}, </if>
+			<if test="health != null">`health` = #{health}, </if>
+			<if test="sex != null">`sex` = #{sex}, </if>
+			<if test="contact != null">`contact` = #{contact}, </if>
+			<if test="birth != null">`birth` = #{birth}, </if>
+			<if test="liveAddress != null">`live_address` = #{liveAddress}, </if>
+			<if test="isOwner != null">`is_owner` = #{isOwner}, </if>
+			<if test="deptId != null">`dept_id` = #{deptId}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="userIdCreate != null">`user_id_create` = #{userIdCreate}, </if>
+			<if test="picId != null">`pic_id` = #{picId}, </if>
+			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
+			<if test="gmtModified != null">`gmt_modified` = #{gmtModified},</if>
+			<if test="age != null">`age` = #{age},</if>
+			<if test="fileId != null">`file_id` = #{fileId},</if>
+			<if test="personnelCategory != null">`personnel_category` = #{personnelCategory},</if>
+			<if test="education != null">`education` = #{education},</if>
+			<if test="allsort != null">`allsort` = #{allsort},</if>
+			<if test="departmentSort != null">`department_sort` = #{departmentSort},</if>
+			<if test="fileNumber != null">`file_number` = #{fileNumber},</if>
+			<if test="worktime != null">`worktime` = #{worktime},</if>
+			<if test="worktomehere != null">`worktomehere` = #{worktomehere}</if>
+		</set>
+		where user_id = #{userId}
+	</update>
+	
+	<update id="updateSort" parameterType="com.bootdo.phry.domain.UserInfoDO">
+		update sys_user set `allsort` =#{value}+1 where allsort = #{value}
+	</update>
+	
+	<update id="updateSort2" parameterType="com.bootdo.phry.domain.UserInfoDO">
+		update sys_user set `allsort` =#{value}-1 where allsort = #{value}
+	</update>
+	
+	<delete id="remove">
+		delete from sys_user where user_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from sys_user where user_id in 
+		<foreach item="userId" collection="array" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</delete>
+
+
+	<select id="age1" resultType="int">
+        select count(*) from sys_user where age between 0 and 20 and password is null and status=1
+    </select>
+
+	<select id="age2" resultType="int">
+        select count(*) from sys_user where age between 21 and 30 and password is null and status=1
+    </select>
+
+	<select id="age3" resultType="int">
+        select count(*) from sys_user where age between 31 and 40 and password is null and status=1
+    </select>
+
+	<select id="age4" resultType="int">
+        select count(*) from sys_user where age between 41 and 50 and password is null and status=1
+    </select>
+
+	<select id="age5" resultType="int">
+        select count(*) from sys_user where age between 51 and 60 and password is null and status=1
+    </select>
+
+	<select id="age6" resultType="int">
+        select count(*) from sys_user where age between 61 and 70 and password is null and status=1
+    </select>
+
+	<select id="study1" resultType="int">
+		select COUNT(*) from ph_education where edu_code=8 and status=1
+	</select>
+
+	<select id="study2" resultType="int">
+		select COUNT(*) from ph_education where edu_code=7 and status=1
+	</select>
+
+	<select id="study3" resultType="int">
+		select COUNT(*) from ph_education where edu_code=6 and status=1
+	</select>
+
+	<select id="study4" resultType="int">
+		select COUNT(*) from ph_education where edu_code=41 or edu_code=44 or edu_code=47 and status=1
+	</select>
+
+	<select id="study5" resultType="int">
+		select COUNT(*) from ph_education where edu_code=21 or edu_code=22 or edu_code=23 or edu_code=24 or edu_code='2A' or edu_code='2B' or edu_code='2C' or edu_code='2D' and status=1
+	</select>
+
+	<select id="study6" resultType="int">
+		select COUNT(*) from ph_education where edu_code=11 or edu_code=12 or edu_code='1A' or edu_code='1B' and status=1
+	</select>
+
+	<select id="work1" resultType="int">
+		select COUNT(*) from ph_work_history where working_time in (select MAX(working_time ) from ph_work_history GROUP BY user_id) and working_year between 0 and 3 and status=1
+	</select>
+
+	<select id="work2" resultType="int">
+		select COUNT(*) from ph_work_history where working_time in (select MAX(working_time ) from ph_work_history GROUP BY user_id) and working_year between 4 and 5 and status=1
+	</select>
+
+	<select id="work3" resultType="int">
+		select COUNT(*) from ph_work_history where working_time in (select MAX(working_time ) from ph_work_history GROUP BY user_id) and working_year between 6 and 9 and status=1
+	</select>
+
+	<select id="work4" resultType="int">
+		select COUNT(*) from ph_work_history where working_time in (select MAX(working_time ) from ph_work_history GROUP BY user_id) and working_year>=10 and status=1
+	</select>
+</mapper>

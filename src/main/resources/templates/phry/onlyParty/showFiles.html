@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="/js/plugins/jquerypdf/jquery.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jquerypdf/jquery.media.js"></script>
+<!-- <script src="/js/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script> -->
+<script type="text/javascript">
+    function showFile(fileId) {
+        layer.open({
+            type : 2,
+            title : '文件',
+            maxmin : true,
+            shadeClose : false, // 点击遮罩关闭层
+            area : [ '100%', '100%' ],
+            content : '/phry/user/showFile/'+fileId // iframe的url
+        });
+    }
+    
+  
+
+</script>
+
+<style type="text/css">
+*,ul,a{
+	margin:0;
+	padding:0;
+	border:0;
+	list-style:none;
+	text-decoration:none;
+}
+#banner_wrap{
+	width:60%;
+	height:95%;
+	margin:0 auto;
+	border:1px solid #c0a599;
+	margin-top:30px;
+	position:relative;
+	overflow:hidden;
+}
+#banner{
+	position:absolute;
+	height:400px;
+	
+}
+.oLi{
+	width:1000px;
+	height:400px;
+	float:left;
+}
+</style>
+<body class="gray-bg" style="padding: 50px;">
+                <input th:value="${url}" id="url" class="form-control" type="text" readonly="true" style="display:none" />
+	<!-- 	<div  id="banner_wrap">
+			<div class="col-sm-12" style="font-size: 26px;border-bottom: 1px solid #eee">图片：</div>
+			<ul  id="banner">
+			<th:block th:each="fileDO,iterStat:${fileDOImgList}">
+				<li class="oLi">
+					<img  th:src="${fileDO.url}" th:onclick="'showFile('+${fileDO.id}+');'"  style="height: 180px;width: 180px;text-align: center;margin: 20px 0px;cursor: pointer">
+				</li>
+			</th:block>
+			  </ul>
+		</div>
+		</div> -->
+		<button  style="margin-right:22%"></button>
+	<button  onclick="fn(-1)" style="margin-right:3%;border-radius:50%"  ><img src="/img/zuo.png" style="height: 80px;width: 80px;" ></button>
+	<img id='img'  style="height: 110%;width: 40%;text-align: center;margin: 3px 0px;cursor: pointer;margin-right:3%"/>
+	<button onclick="fn(1)"  style="border-radius:50%" ><img src="/img/you.png" style="height: 80px;width: 80px;" ></button>
+		
+		<!-- <div class="col-sm-12">
+			<div class="col-sm-12" style="font-size: 26px;border-bottom: 1px solid #eee">文档：</div>
+			<th:block th:each="fileDO,iterStat:${fileDODocList}">
+				<div class="col-sm-3" style="margin-top: 20px;">
+					<a style="font-size: 18px;" th:href="${fileDO.url}"  th:text="${fileDO.originalFilename}"></a>
+				</div>
+			</th:block>
+		</div> -->
+
+
+
+
+	<div th:include="include::footer"></div>
+</body>
+<script language=JavaScript>
+
+
+
+var arrAll=document.getElementById("url").value;
+/* alert(arr); */
+
+var arr = arrAll.split(",");
+
+
+var arr2=[
+	"/files/6e17a403-e272-4488-a4a4-4e8c65ef35b4.jpg",
+	"/files/78f4ca23-deb5-44b4-93af-6888ea2167b3.jpg",
+	"/files/db39f42a-0501-4957-86c7-7842a8ffe972.jpg",
+	"/files/0d98a2ae-fb09-495f-937a-7da609d1f6f7.jpg"
+]
+var img=document.getElementById('img');
+img.src=arr[0];//给个默认图片
+window.onload=function(){//页面加载完，立马执行
+var oimg=[];
+for(var i=0;i<arr.length;i++){
+	oimg[i]=new Image();//创建了一组img标签  或者创建img标签，然后在添加进去
+	oimg[i].src=arr[i];
+	console.log(oimg[0]);
+}
+}
+var i=0;
+function fn(n){
+	if(n==1){
+		i++;
+		i==arr.length?i=0:i;//三木运算符
+	}else{
+		i==0?i=arr.length:i;
+		i--;
+	}
+img.src=arr[i];
+}
+</script>
+</html>

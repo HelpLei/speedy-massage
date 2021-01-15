@@ -1,0 +1,65 @@
+package ${package}.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import ${package}.dao.${className}Dao;
+import ${package}.domain.${className}DO;
+import ${package}.dto.${className}DTO;
+import ${package}.service.${className}Service;
+import com.bootdo.common.utils.R;
+import com.bootdo.common.utils.ConvertDomainUtils;
+
+
+
+@Service
+public class ${className}ServiceImpl implements ${className}Service {
+	@Autowired
+	private ${className}Dao ${classname}Dao;
+	
+	@Override
+	public ${className}DTO get(${pk.attrType} ${pk.attrname}){
+
+		${className}DO ${classname}DO = ${classname}Dao.get(${pk.attrname});
+        if (${classname}DO != null){
+            return ConvertDomainUtils.convertObject(${classname}DO,${className}DTO.class);
+        }
+		return  new ${className}DTO();
+	}
+	
+	@Override
+	public List<${className}DTO> list(Map<String, Object> map){
+        return ConvertDomainUtils.convertList(${classname}Dao.list(map),${className}DTO.class);
+	}
+	
+	@Override
+	public int count(Map<String, Object> map){
+		return ${classname}Dao.count(map);
+	}
+	
+	@Override
+	public R save(${className}DTO ${classname}){
+        int i = ${classname}Dao.save(ConvertDomainUtils.convertObject(${classname},${className}DO.class));
+        return R.result(i);
+	}
+	
+	@Override
+	public R update(${className}DTO ${classname}){
+        int i = ${classname}Dao.update(ConvertDomainUtils.convertObject(${classname},${className}DO.class));
+        return R.result(i);
+	}
+	
+	@Override
+	public int remove(${pk.attrType} ${pk.attrname}){
+		return ${classname}Dao.remove(${pk.attrname});
+	}
+	
+	@Override
+	public int batchRemove(${pk.attrType}[] ${pk.attrname}s){
+		return ${classname}Dao.batchRemove(${pk.attrname}s);
+	}
+	
+}

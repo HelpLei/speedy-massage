@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.dao.PactDao">
+
+	<select id="get" resultType="com.bootdo.phry.domain.PactDO">
+		select `id`,`date_signing`,`expiration_time`,`personnel_id`,`probation_period`,`name`,`date_birth`,`department`,`post`,`working_state`,`expiration_date`,`probation_date`,`retire_date`,`sex`,`pact_remark`,`retirement`,`file_id`,resignation_time,transfer_time from ph_pact where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.phry.domain.PactDO">
+		select `id`,`date_signing`,`expiration_time`,`personnel_id`,`probation_period`,`name`,`date_birth`,`department`,`post`,`working_state`,`expiration_date`,`probation_date`,`retire_date`,`sex`,`pact_remark`,`retirement`,`file_id`,resignation_time,transfer_time from ph_pact
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="dateSigning != null and dateSigning != ''"> and date_signing = #{dateSigning} </if>
+		  		  <if test="expirationTime != null and expirationTime != ''"> and expiration_time = #{expirationTime} </if>
+		  		  <if test="personnelId != null and personnelId != ''"> and personnel_id = #{personnelId} </if>
+		  		  <if test="probationPeriod != null and probationPeriod != ''"> and probation_period = #{probationPeriod} </if>
+		  		  <if test="name != null and name != ''"> and name like concat('%',#{name},'%') </if>
+		  		  <if test="dateBirth != null and dateBirth != ''"> and date_birth = #{dateBirth} </if>
+		  		  <if test="department != null and department != ''"> and department like concat('%',#{department},'%')  </if>
+		  		  <if test="post != null and post != ''"> and  post like concat('%',#{post},'%')</if>
+		  		  <if test="workingState != null"> and working_state = #{workingState} </if>
+		  		  <if test="expirationDate != null and expirationDate != ''"> and expiration_date = #{expirationDate} </if>
+		  		  <if test="probationDate != null and probationDate != ''"> and probation_date = #{probationDate} </if>
+		  		  <if test="retireDate != null and retireDate != ''"> and retire_date = #{retireDate} </if>
+		  		  <if test="sex != null and sex != ''"> and sex = #{sex} </if>
+		  		  <if test="pactRemark != null and pactRemark != ''"> and pact_remark = #{pactRemark} </if>
+		  		  <if test="retirement != null and retirement != ''"> and retirement = #{retirement} </if>
+		  		  <if test="resignationTime != null and resignationTime != ''"> and resignation_time = #{resignationTime} </if>
+		  		  <if test="transferTime != null and transferTime != ''"> and transfer_time = #{transferTime} </if>
+				  <if test="isexpired!=null and isexpired != ''">and now()>DATE_ADD(expiration_time,interval -1 MONTH)</if>
+			      <if test="expiredState != null and expiredState != ''"> and (working_state = 3 or working_state = 4) </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ph_pact
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="dateSigning != null and dateSigning != ''"> and date_signing = #{dateSigning} </if>
+		  		  <if test="expirationTime != null and expirationTime != ''"> and expiration_time = #{expirationTime} </if>
+		  		  <if test="personnelId != null and personnelId != ''"> and personnel_id = #{personnelId} </if>
+		  		  <if test="probationPeriod != null and probationPeriod != ''"> and probation_period = #{probationPeriod} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="dateBirth != null and dateBirth != ''"> and date_birth = #{dateBirth} </if>
+		  		  <if test="department != null and department != ''"> and department = #{department} </if>
+		  		  <if test="post != null and post != ''"> and post = #{post} </if>
+		  		  <if test="workingState != null and workingState != ''"> and working_state = #{workingState} </if>
+		  		  <if test="expirationDate != null and expirationDate != ''"> and expiration_date = #{expirationDate} </if>
+		  		  <if test="probationDate != null and probationDate != ''"> and probation_date = #{probationDate} </if>
+		  		  <if test="retireDate != null and retireDate != ''"> and retire_date = #{retireDate} </if>
+		  		  <if test="sex != null and sex != ''"> and sex = #{sex} </if>
+		  		  <if test="pactRemark != null and pactRemark != ''"> and pact_remark = #{pactRemark} </if>
+		  		  <if test="retirement != null and retirement != ''"> and retirement = #{retirement} </if>
+		  		   <if test="resignationTime != null and resignationTime != ''"> and resignation_time = #{resignationTime} </if>
+		  		  <if test="transferTime != null and transferTime != ''"> and transfer_time = #{transferTime} </if>
+				 <if test="isexpired!=null and isexpired != ''">and now()>DATE_ADD(expiration_time,interval -1 MONTH)</if>
+				 <if test="expiredState != null and expiredState != ''"> and (working_state = 3 or working_state = 4) </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.phry.domain.PactDO" useGeneratedKeys="true" keyProperty="id">
+		insert into ph_pact
+		(
+			`date_signing`, 
+			`expiration_time`, 
+			`personnel_id`, 
+			`probation_period`, 
+			`name`, 
+			`date_birth`, 
+			`department`, 
+			`post`, 
+			`working_state`, 
+			`expiration_date`, 
+			`probation_date`, 
+			`retire_date`, 
+			`sex`, 
+			`pact_remark`, 
+			`retirement`,
+			`file_id`,
+			`resignation_time`,
+			`transfer_time`
+		)
+		values
+		(
+			#{dateSigning}, 
+			#{expirationTime}, 
+			#{personnelId}, 
+			#{probationPeriod}, 
+			#{name}, 
+			#{dateBirth}, 
+			#{department}, 
+			#{post}, 
+			#{workingState}, 
+			#{expirationDate}, 
+			#{probationDate}, 
+			#{retireDate}, 
+			#{sex}, 
+			#{pactRemark}, 
+			#{retirement},
+			#{fileId},
+			#{resignationTime},
+			#{transferTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.phry.domain.PactDO">
+		update ph_pact 
+		<set>
+			<if test="dateSigning != null">`date_signing` = #{dateSigning}, </if>
+			<if test="expirationTime != null">`expiration_time` = #{expirationTime}, </if>
+			<if test="personnelId != null">`personnel_id` = #{personnelId}, </if>
+			<if test="probationPeriod != null">`probation_period` = #{probationPeriod}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="dateBirth != null">`date_birth` = #{dateBirth}, </if>
+			<if test="department != null">`department` = #{department}, </if>
+			<if test="post != null">`post` = #{post}, </if>
+			<if test="workingState != null">`working_state` = #{workingState}, </if>
+			<if test="expirationDate != null">`expiration_date` = #{expirationDate}, </if>
+			<if test="probationDate != null">`probation_date` = #{probationDate}, </if>
+			<if test="retireDate != null">`retire_date` = #{retireDate}, </if>
+			<if test="sex != null">`sex` = #{sex}, </if>
+			<if test="pactRemark != null">`pact_remark` = #{pactRemark}, </if>
+			<if test="retirement != null">`retirement` = #{retirement},</if>
+			<if test="fileId != null">`file_id` = #{fileId},</if>
+			<if test="resignationTime != null">`resignation_time` = #{resignationTime},</if>
+			<if test="transferTime != null">`transfer_time` = #{transferTime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from ph_pact where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ph_pact where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

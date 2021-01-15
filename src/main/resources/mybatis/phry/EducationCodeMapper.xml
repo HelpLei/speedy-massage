@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.dao.EducationCodeDao">
+
+	<select id="get" resultType="com.bootdo.phry.domain.EducationCodeDO">
+		select `education_code_id`,`parent_id`,`education_code`,`education_code_name`,`education_year`,`status`,`create_time`,`update_time` from ph_education_code where education_code_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.phry.domain.EducationCodeDO">
+		select `education_code_id`,`parent_id`,`education_code`,`education_code_name`,`education_year`,`status`,`create_time`,`update_time` from ph_education_code
+        <where>  
+		  		  <if test="educationCodeId != null and educationCodeId != ''"> and education_code_id = #{educationCodeId} </if>
+				  <if test="parentId != null and parentId != ''"> and parent_id = #{parentId} </if>
+		  		  <if test="educationCode != null and educationCode != ''"> and education_code = #{educationCode} </if>
+		  		  <if test="educationCodeName != null and educationCodeName != ''"> and education_code_name = #{educationCodeName} </if>
+				  <if test="educationYear != null and educationYear != ''"> and education_year = #{educationYear} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by education_code_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ph_education_code
+		 <where>  
+		  		  <if test="educationCodeId != null and educationCodeId != ''"> and education_code_id = #{educationCodeId} </if>
+			      <if test="parentId != null and parentId != ''"> and parent_id = #{parentId} </if>
+		  		  <if test="educationCode != null and educationCode != ''"> and education_code = #{educationCode} </if>
+		  		  <if test="educationCodeName != null and educationCodeName != ''"> and education_code_name = #{educationCodeName} </if>
+			 	  <if test="educationYear != null and educationYear != ''"> and education_year = #{educationYear} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="createTime != null and createTime != ''"> and create_time = #{createTime} </if>
+		  		  <if test="updateTime != null and updateTime != ''"> and update_time = #{updateTime} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.phry.domain.EducationCodeDO" useGeneratedKeys="true" keyProperty="educationCodeId">
+		insert into ph_education_code
+		(
+			`parent_id`,
+			`education_code`, 
+			`education_code_name`,
+			`education_year`,
+			`status`,
+			`create_time`, 
+			`update_time`
+		)
+		values
+		(
+			#{parentId},
+			#{educationCode}, 
+			#{educationCodeName},
+			#{educationYear},
+			#{status}, 
+			#{createTime}, 
+			#{updateTime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.phry.domain.EducationCodeDO">
+		update ph_education_code 
+		<set>
+			<if test="parentId != null">`parent_id` = #{parentId}, </if>
+			<if test="educationCode != null">`education_code` = #{educationCode}, </if>
+			<if test="educationCodeName != null">`education_code_name` = #{educationCodeName}, </if>
+			<if test="educationYear != null">`education_year` = #{educationYear}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="updateTime != null">`update_time` = #{updateTime}</if>
+		</set>
+		where education_code_id = #{educationCodeId}
+	</update>
+	
+	<delete id="remove">
+		delete from ph_education_code where education_code_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ph_education_code where education_code_id in 
+		<foreach item="educationCodeId" collection="array" open="(" separator="," close=")">
+			#{educationCodeId}
+		</foreach>
+	</delete>
+
+</mapper>

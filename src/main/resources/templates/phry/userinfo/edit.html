@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+						<input id="userId" name="userId" th:value="${user.userId}"  type="hidden">
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">头像：</label>
+								<div class="col-sm-8">
+									<input type="hidden" id="picId" name="picId" th:value="${user.picId}" >
+									<img id="showImg" th:src="@{${fileDO.url}}" style="width: 20%;cursor: pointer;" >
+									<input  type="file" class="hidden" id="file" name="file" onchange="uploadFilePic(this.files)" />
+								</div>
+
+								<script type="text/javascript">
+                                    $("#showImg").click(function () {
+                                        $("#file").click();
+                                    });
+
+                                    function uploadFilePic(files) {
+                                        var type = files[0].type;
+                                        if(type.indexOf("image") < 0){
+                                            layer.msg('请上传图片格式...', {
+                                                icon: 2
+                                            });
+                                            return false;
+                                        }
+                                        var size = files[0].size;
+                                        if ((size / 1024 / 1024) > 2) {
+                                            layer.msg('图片大小不能超过2M...', {
+                                                icon: 2
+                                            });
+                                            return false;
+                                        }
+                                        console.log("size=" + size);
+                                        var formData = new FormData();
+                                        formData.append("file", files[0]);
+                                        $.ajax({
+                                            data: formData,
+                                            type: "POST",
+                                            url: "/common/sysFile/upload",    // 图片上传出来的url，返回的是图片上传后的路径，http格式
+                                            cache: false,
+                                            contentType: false,
+                                            processData: false,
+                                            dataType: "json",
+                                            success: function (data) {//data是返回的hash,key之类的值，key是定义的文件名
+                                                $("#showImg").attr("src", data.fileName);
+                                                $("#picId").val(data.sysFileId);
+                                            },
+                                            error: function () {
+                                                layer.msg('上传失败', {
+                                                    icon: 2
+                                                });
+                                            }
+                                        });
+                                    }
+								</script>
+							</div>
+
+							<div class="form-group">	
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>姓名：</label>
+								<div class="col-sm-8">
+									<input id="username" name="username" th:value="${user.username}"
+										   placeholder="请输入长度不大于30的字符" maxlength="30" onkeyup="this.value=this.value.replace(/\s+/g,'')" class="form-control" type="text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>手机号：</label>
+								<div class="col-sm-8">
+									<input id="mobile" name="mobile"  placeholder="请输入长度为11的字符" maxlength="11" th:value="${user.mobile}" class="form-control" type="text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">性别：</label>
+								<div class="col-sm-8">
+									<label class="radio-inline">
+										<input type="radio" name="sex" th:field="*{user.sex}" value="1" /> 男
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="sex" th:field="*{user.sex}" value="0" /> 女
+									</label>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>开始工作时间：</label>
+								<div class="col-sm-8">
+									<input id="worktime" name="worktime" placeholder="开始工作时间" readonly th:value="${user.worktime}" class="laydate-icon layer-date form-control" type="text">
+								</div>
+							</div> 
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>进入潘黄时间：</label>
+								<div class="col-sm-8">
+									<input id="worktomehere" name="worktomehere" placeholder="进入潘黄时间" readonly th:value="${user.worktomehere}" class="laydate-icon layer-date form-control" type="text">
+								</div>
+							</div> 
+
+							<!--<div class="form-group">	-->
+								<!--<label class="col-sm-3 control-label">密码：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="password" name="password" th:value="${user.password}" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">身份证号：</label>
+								<div class="col-sm-8">
+									<input id="idCard" name="idCard" placeholder="请输入长度不大于18的字符" maxlength="18" th:value="${user.idCard}" class="form-control" type="text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">请输入档案号：</label>
+								<div class="col-sm-8">
+									<input id="fileNumber" name="fileNumber"  class="form-control" th:value="${user.fileNumber}"  type="text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>民族：</label>
+								<div class="col-sm-8">
+									<select data-placeholder="--选择民族--" name="nation" id="nation" class="form-control chosen-select" tabindex="2">
+										<option value="">-- 选择民族 --</option>
+										<option value="汉族"  th:selected="${user.nation == '汉族'}">汉族</option>
+										<option value="满族"  th:selected="${user.nation == '满族'}">满族</option>
+										<option value="蒙古族"  th:selected="${user.nation == '蒙古族'}">蒙古族</option>
+										<option value="回族"  th:selected="${user.nation == '回族'}">回族</option>
+										<option value="藏族"  th:selected="${user.nation == '藏族'}">藏族</option>
+										<option value="维吾尔族"  th:selected="${user.nation == '维吾尔族'}">维吾尔族</option>
+										<option value="苗族"  th:selected="${user.nation == '苗族'}">苗族</option>
+										<option value="彝族"  th:selected="${user.nation == '彝族'}">彝族</option>
+										<option value="壮族"  th:selected="${user.nation == '壮族'}">壮族</option>
+										<option value="布依族"  th:selected="${user.nation == '布依族'}">布依族</option>
+										<option value="侗族"  th:selected="${user.nation == '侗族'}">侗族</option>
+										<option value="瑶族"  th:selected="${user.nation == '瑶族'}">瑶族</option>
+										<option value="白族"  th:selected="${user.nation == '白族'}">白族</option>
+										<option value="土家族"  th:selected="${user.nation == '土家族'}">土家族</option>
+										<option value="哈尼族"  th:selected="${user.nation == '哈尼族'}">哈尼族</option>
+										<option value="哈萨克族"  th:selected="${user.nation == '哈萨克族'}">哈萨克族</option>
+										<option value="傣族"  th:selected="${user.nation == '傣族'}">傣族</option>
+										<option value="黎族"  th:selected="${user.nation == '黎族'}">黎族</option>
+										<option value="傈僳族"  th:selected="${user.nation == '傈僳族'}">傈僳族</option>
+										<option value="佤族"  th:selected="${user.nation == '佤族'}">佤族</option>
+										<option value="畲族"  th:selected="${user.nation == '畲族'}">畲族</option>
+										<option value="高山族"  th:selected="${user.nation == '高山族'}">高山族</option>
+										<option value="拉祜族"  th:selected="${user.nation == '拉祜族'}">拉祜族</option>
+										<option value="水族"  th:selected="${user.nation == '水族'}">水族</option>
+										<option value="东乡族"  th:selected="${user.nation == '东乡族'}">东乡族</option>
+										<option value="纳西族"  th:selected="${user.nation == '纳西族'}">纳西族</option>
+										<option value="景颇族"  th:selected="${user.nation == '景颇族'}">景颇族</option>
+										<option value="柯尔克孜族"  th:selected="${user.nation == '柯尔克孜族'}">柯尔克孜族</option>
+										<option value="土族"  th:selected="${user.nation == '土族'}">土族</option>
+										<option value="达斡尔族"  th:selected="${user.nation == '达斡尔族'}">达斡尔族</option>
+										<option value="仫佬族"  th:selected="${user.nation == '仫佬族'}">仫佬族</option>
+										<option value="羌族"  th:selected="${user.nation == '羌族'}">羌族</option>
+										<option value="布朗族"  th:selected="${user.nation == '布朗族'}">布朗族</option>
+										<option value="撒拉族"  th:selected="${user.nation == '撒拉族'}">撒拉族</option>
+										<option value="毛南族"  th:selected="${user.nation == '毛南族'}">毛南族</option>
+										<option value="仡佬族"  th:selected="${user.nation == '仡佬族'}">仡佬族</option>
+										<option value="锡伯族"  th:selected="${user.nation == '锡伯族'}">锡伯族</option>
+										<option value="阿昌族"  th:selected="${user.nation == '阿昌族'}">阿昌族</option>
+										<option value="普米族"  th:selected="${user.nation == '普米族'}">普米族</option>
+										<option value="朝鲜族"  th:selected="${user.nation == '朝鲜族'}">朝鲜族</option>
+										<option value="塔吉克族"  th:selected="${user.nation == '塔吉克族'}">塔吉克族</option>
+										<option value="怒族"  th:selected="${user.nation == '怒族'}">怒族</option>
+										<option value="乌孜别克族"  th:selected="${user.nation == '乌孜别克族'}">乌孜别克族</option>
+										<option value="俄罗斯族"  th:selected="${user.nation == '俄罗斯族'}">俄罗斯族</option>
+										<option value="鄂温克族"  th:selected="${user.nation == '鄂温克族'}">鄂温克族</option>
+										<option value="德昂族"  th:selected="${user.nation == '德昂族'}">德昂族</option>
+										<option value="保安族"  th:selected="${user.nation == '保安族'}">保安族</option>
+										<option value="裕固族"  th:selected="${user.nation == '裕固族'}">裕固族</option>
+										<option value="京族"  th:selected="${user.nation == '京族'}">京族</option>
+										<option value="塔塔尔族"  th:selected="${user.nation == '塔塔尔族'}">塔塔尔族</option>
+										<option value="独龙族"  th:selected="${user.nation == '独龙族'}">独龙族</option>
+										<option value="鄂伦春族"  th:selected="${user.nation == '鄂伦春族'}">鄂伦春族</option>
+										<option value="赫哲族"  th:selected="${user.nation == '赫哲族'}">赫哲族</option>
+										<option value="门巴族"  th:selected="${user.nation == '门巴族'}">门巴族</option>
+										<option value="珞巴族"  th:selected="${user.nation == '珞巴族'}">珞巴族</option>
+										<option value="基诺族"  th:selected="${user.nation == '基诺族'}">基诺族</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>籍贯：</label>
+								<div class="col-sm-8">
+									<input id="natives" name="natives" placeholder="请输入长度不大于10的字符" maxlength="10" th:value="${user.natives}" class="form-control" type="text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>出生地：</label>
+								<div class="col-sm-8">
+									<input id="birthPlace" name="birthPlace" placeholder="请输入长度不大于50的字符" maxlength="50" th:value="${user.birthPlace}" class="form-control" type="text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">健康状况：</label>
+								<div class="col-sm-8">
+									<input id="health" name="health" placeholder="请输入长度不大于10的字符" maxlength="10" th:value="${user.health}" class="form-control" type="text">
+								</div>
+							</div>
+
+							<!-- <div class="form-group">
+								<label class="col-sm-3 control-label">联系方式：</label>
+								<div class="col-sm-8">
+									<input id="contact" name="contact" placeholder="请输入长度不大于20的字符" maxlength="20" th:value="${user.contact}" class="form-control" type="text">
+								</div>
+							</div> -->
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">现居住地：</label>
+								<div class="col-sm-8">
+									<input id="liveAddress" name="liveAddress" placeholder="请输入长度不大于50的字符" maxlength="50" th:value="${user.liveAddress}" class="form-control" type="text">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>学历：</label>
+								<div class="col-sm-8">
+									<select data-placeholder="--选择学历--" name="education" id="education" class="form-control chosen-select" tabindex="2">
+										<option value="">-- 选择学历 --</option>
+										<option value="博士"  th:selected="${user.education == '博士'}">博士</option>
+										<option value="研究生"  th:selected="${user.education == '研究生'}">研究生</option>
+										<option value="本科"  th:selected="${user.education == '本科'}">本科</option>
+										<option value="大专"  th:selected="${user.education == '大专'}">大专</option>
+										<option value="中专"  th:selected="${user.education == '中专'}">中专</option>
+										<option value="高中"  th:selected="${user.education == '高中'}">高中</option>
+										<option value="初中"  th:selected="${user.education == '初中'}">初中</option>
+										<option value="小学"  th:selected="${user.education == '小学'}">小学</option>
+									</select>
+								</div>
+							</div>
+
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">人员类别：</label>
+								<div class="col-sm-8">
+									<label class="radio-inline">
+										<input type="radio" name="personnelCategory" th:field="*{user.personnelCategory}" value="0" /> 行政
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="personnelCategory" th:field="*{user.personnelCategory}" value="1" />事业
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="personnelCategory" th:field="*{user.personnelCategory}" value="2" />编外人员
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="personnelCategory" th:field="*{user.personnelCategory}" value="3" />编外人员(退役军人安置)
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="personnelCategory" th:field="*{user.personnelCategory}" value="4" />编外人员(军嫂安置)
+									</label>
+									<label class="radio-inline">
+										<input type="radio" name="personnelCategory" th:field="*{user.personnelCategory}" value="5" />编外人员(大学生村官)
+									</label>
+								</div>
+							</div>
+							<!--<div class="form-group">-->
+								<!--<label class="col-sm-3 control-label">1：系统用户2：录入人员：</label>-->
+								<!--<div class="col-sm-8">-->
+									<!--<input id="isOwner" name="isOwner" th:value="${user.isOwner}" class="form-control" type="text">-->
+								<!--</div>-->
+							<!--</div>-->
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label"><i style="color: red;">*</i>部门：</label>
+								<div class="col-sm-8">
+									<input id="deptId" name="deptId" class="hidden" th:value="${user.deptId}">
+									<input id="deptName" name="deptName" class="form-control" type="text" style="cursor: pointer;"
+										   onclick="openDept()" readonly="readonly" placeholder="所属部门" th:value="${user.deptName}">
+								</div>
+							</div>
+
+							<div class="form-group fileAddTemp">
+								<input type="hidden" id="fileId" name="fileId" th:value="${user.fileId}">
+
+								<th:block th:if="${user.fileDOList.size()}==0">
+									<label class="col-sm-3 control-label">文件：</label>
+									<div class="col-sm-8 removeFlag0">
+										<input type="hidden" id="fileIdL0" class="fileIdL">
+										<input  type="file" class="hidden ddd0" id="file0" onchange="uploadFile(this.files,0)" />
+										<input class="form-control fileName" id="fileName0" data-index="0" type="text" style="cursor: pointer;width: 90%;float: left;"
+											   readonly="readonly" placeholder="上传文件">
+										<div style="width: 10%;display: inline-block;float: left;position: relative;">
+											<div style="position: absolute;"  onclick="addItem()" >
+												<span class="form-control" style="border: none;padding: 6px 6px;cursor: pointer">
+													<i class="fa fa-plus" style="color: black;" aria-hidden="true"></i>
+												</span>
+											</div>
+											<!--<div style="position: absolute;left: 30px;" onclick="removeItem(0);" >-->
+												<!--<span class="form-control" style="border: none;padding: 6px 6px;cursor: pointer">-->
+													<!--<i class="fa fa-remove" style="color: black;" aria-hidden="true"></i>-->
+												<!--</span>-->
+											<!--</div>-->
+										</div>
+									</div>
+								</th:block>
+
+								<th:block th:each="fileDO,iterStat:${user.fileDOList}">
+									<label class="col-sm-3 control-label" th:if="${iterStat.index}==0">文件</label>
+									<label th:class="'col-sm-3 control-label removeFlag'+${iterStat.index}" th:if="${iterStat.index}!=0"></label>
+									<div th:class="${iterStat.index}==0?'col-sm-8 ':'col-sm-8 removeFlag'+${iterStat.index}" th:style="${iterStat.index}==0?'':'margin-top: 20px;'">
+										<input type="hidden" th:id="'fileIdL'+${iterStat.index}" th:value="${fileDO.id}" class="fileIdL">
+										<input  type="file" th:class="'hidden ddd'+${iterStat.index}" th:id="'file'+${iterStat.index}" th:onchange="'uploadFile(this.files,'+${iterStat.index}+')'" />
+										<input class="form-control fileName" th:id="'fileName'+${iterStat.index}" th:data-index="${iterStat.index}" type="text" style="cursor: pointer;width: 90%;float: left;"
+											   readonly="readonly" th:value="${fileDO.originalFilename}" placeholder="上传文件">
+										<div style="width: 10%;display: inline-block;float: left;position: relative;">
+											<div style="position: absolute;"  onclick="addItem()" >
+												<span class="form-control" style="border: none;padding: 6px 6px;cursor: pointer">
+													<i class="fa fa-plus" style="color: black;" aria-hidden="true"></i>
+												</span>
+											</div>
+											<div style="position: absolute;left: 30px;" th:if="${iterStat.index}!=0" th:onclick="'removeItem('+${iterStat.index}+');'" >
+												<span class="form-control" style="border: none;padding: 6px 6px;cursor: pointer">
+													<i class="fa fa-remove" style="color: black;" aria-hidden="true"></i>
+												</span>
+											</div>
+										</div>
+									</div>
+								</th:block>
+
+
+								<script type="text/javascript">
+                                    $(document).on('click', '.fileName', function() {
+                                        var index = $(this).data("index");
+                                        $(".ddd"+index).click();
+                                    });
+                                    var indexTemp = [0];
+                                    var fdT = $("#fileId").val();
+                                    var fileIds =[];
+                                    if(fdT!=null && fdT!=""){
+                                    	fileIds = fdT.split(",");
+                                    }
+                                    var index=fileIds.length;
+                                    function uploadFile(files,index) {
+                                        var size = files[0].size;
+                                        console.log("size=" + size);
+                                        var formData = new FormData();
+                                        formData.append("file", files[0]);
+                                        $.ajax({
+                                            data: formData,
+                                            type: "POST",
+                                            url: "/common/sysFile/upload",    // 图片上传出来的url，返回的是图片上传后的路径，http格式
+                                            cache: false,
+                                            contentType: false,
+                                            processData: false,
+                                            dataType: "json",
+                                            success: function (data) {//data是返回的hash,key之类的值，key是定义的文件名
+                                                $("#fileIdL"+index).val(data.sysFileId);
+                                                $("#fileName"+index).val(data.sysFile.originalFilename);
+                                            },
+                                            error: function () {
+                                                layer.msg('上传失败', {
+                                                    icon: 2
+                                                });
+                                            }
+                                        });
+                                    }
+                                    function addItem() {
+                                        index++;
+                                        indexTemp.splice(index, 0, index);
+                                        var temp =  '<label class="col-sm-3 control-label removeFlag'+index+'" style="margin-top: 20px;"></label>'
+													+'<div class="col-sm-8  removeFlag'+index+'" style="margin-top: 20px;">'
+													+'	<input type="hidden" id="fileIdL'+index+'" class="fileIdL">'
+													+'	<input  type="file" class="hidden ddd'+index+'" id="file'+index+'" onchange="uploadFile(this.files,'+index+')" />'
+													+'	<input class="form-control fileName" id="fileName'+index+'" data-index="'+index+'" type="text" style="cursor: pointer;width: 90%;float: left;"'
+													+'		readonly="readonly" placeholder="上传文件">'
+													+'	<div style="width: 10%;display: inline-block;float: left;position: relative;">'
+													+'		<div class="" style="position: absolute;"  onclick="addItem()" >'
+													+'			<span class="form-control" style="border: none;padding: 6px 6px;cursor: pointer">'
+													+'				<i class="fa fa-plus" style="color: black;" aria-hidden="true"></i>'
+													+'			</span>'
+													+'		</div>'
+													+'		<div style="position: absolute;left: 30px;" onclick="removeItem('+index+');" >'
+													+'			<span class="form-control" style="border: none;padding: 6px 6px;cursor: pointer">'
+													+'				<i class="fa fa-remove" style="color: black;" aria-hidden="true"></i>'
+													+'			</span>'
+													+'		</div>'
+													+'	</div>'
+													+'</div>';
+                                        $(".fileAddTemp").append(temp);
+                                    }
+
+                                    function removeItem(index) {
+                                        var temp = $(".fileName");
+                                        if ( temp.length <= 1 ){
+                                            return;
+                                        }
+                                        indexTemp.splice(index, 1,-1);
+                                        $(".removeFlag"+index).remove();
+
+                                    }
+								</script>
+
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">状态:</label>
+								<div class="col-sm-8">
+									<label class="radio-inline">
+										<input th:field="*{user.status}" type="radio" name="status" value="1" />正常
+									</label>
+									<label class="radio-inline">
+										<input th:field="*{user.status}" type="radio" name="status" value="0" />禁用
+									</label>
+									<label class="radio-inline">
+										<input th:field="*{user.status}" type="radio" name="status" value="2" />调出
+									</label>
+									<label class="radio-inline">
+										<input th:field="*{user.status}" type="radio" name="status" value="3" />离职
+									</label>
+									<label class="radio-inline">
+										<input th:field="*{user.status}" type="radio" name="status" value="4" />退休
+									</label>
+									<label class="radio-inline">
+										<input th:field="*{user.status}" type="radio" name="status" value="5" />死亡
+									</label>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/phry/userinfo/edit.js">
+	</script>
+	<script>
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#birth',
+                type: 'date',
+                range: false,
+                format: 'yyyy-M-d'
+            });
+        })
+        
+         layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#worktime',
+                type: 'date',
+                range: false,
+                max: getNowFormatDate(),
+                format: 'yyyy-MM-dd'
+            });
+        })
+         layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#worktomehere',
+                type: 'date',
+                range: false,
+                max: getNowFormatDate(),
+                format: 'yyyy-MM-dd'
+            });
+        })
+          function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + date.getMinutes()
+                + seperator2 + date.getSeconds();
+            return currentdate;
+        }
+	</script>
+</body>
+</html>
