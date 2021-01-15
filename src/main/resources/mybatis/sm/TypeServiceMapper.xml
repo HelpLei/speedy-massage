@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.dao.TypeServiceDao">
+
+	<select id="get" resultType="com.bootdo.sm.domain.TypeServiceDO">
+		select `id`,`name`,`type_time`,`name_detail`,`price`,`service_countf`,`for_parts`,`regulate_content`,`service_content`,`booking_information`,`taboo_prompt`,`type`,`creat_id`,`creat_name`,`creat_time`,`remark` from sm_type_service where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.sm.domain.TypeServiceDO">
+		select `id`,`name`,`type_time`,`name_detail`,`price`,`service_countf`,`for_parts`,`regulate_content`,`service_content`,`booking_information`,`taboo_prompt`,`type`,`creat_id`,`creat_name`,`creat_time`,`remark` from sm_type_service
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="typeTime != null and typeTime != ''"> and type_time = #{typeTime} </if>
+		  		  <if test="nameDetail != null and nameDetail != ''"> and name_detail = #{nameDetail} </if>
+		  		  <if test="price != null and price != ''"> and price = #{price} </if>
+		  		  <if test="serviceCountf != null and serviceCountf != ''"> and service_countf = #{serviceCountf} </if>
+		  		  <if test="forParts != null and forParts != ''"> and for_parts = #{forParts} </if>
+		  		  <if test="regulateContent != null and regulateContent != ''"> and regulate_content = #{regulateContent} </if>
+		  		  <if test="serviceContent != null and serviceContent != ''"> and service_content = #{serviceContent} </if>
+		  		  <if test="bookingInformation != null and bookingInformation != ''"> and booking_information = #{bookingInformation} </if>
+		  		  <if test="tabooPrompt != null and tabooPrompt != ''"> and taboo_prompt = #{tabooPrompt} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="creatId != null and creatId != ''"> and creat_id = #{creatId} </if>
+		  		  <if test="creatName != null and creatName != ''"> and creat_name = #{creatName} </if>
+		  		  <if test="creatTime != null and creatTime != ''"> and creat_time = #{creatTime} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from sm_type_service
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="typeTime != null and typeTime != ''"> and type_time = #{typeTime} </if>
+		  		  <if test="nameDetail != null and nameDetail != ''"> and name_detail = #{nameDetail} </if>
+		  		  <if test="price != null and price != ''"> and price = #{price} </if>
+		  		  <if test="serviceCountf != null and serviceCountf != ''"> and service_countf = #{serviceCountf} </if>
+		  		  <if test="forParts != null and forParts != ''"> and for_parts = #{forParts} </if>
+		  		  <if test="regulateContent != null and regulateContent != ''"> and regulate_content = #{regulateContent} </if>
+		  		  <if test="serviceContent != null and serviceContent != ''"> and service_content = #{serviceContent} </if>
+		  		  <if test="bookingInformation != null and bookingInformation != ''"> and booking_information = #{bookingInformation} </if>
+		  		  <if test="tabooPrompt != null and tabooPrompt != ''"> and taboo_prompt = #{tabooPrompt} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="creatId != null and creatId != ''"> and creat_id = #{creatId} </if>
+		  		  <if test="creatName != null and creatName != ''"> and creat_name = #{creatName} </if>
+		  		  <if test="creatTime != null and creatTime != ''"> and creat_time = #{creatTime} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.sm.domain.TypeServiceDO" useGeneratedKeys="true" keyProperty="id">
+		insert into sm_type_service
+		(
+			`name`, 
+			`type_time`, 
+			`name_detail`, 
+			`price`, 
+			`service_countf`, 
+			`for_parts`, 
+			`regulate_content`, 
+			`service_content`, 
+			`booking_information`, 
+			`taboo_prompt`, 
+			`type`, 
+			`creat_id`, 
+			`creat_name`, 
+			`creat_time`, 
+			`remark`
+		)
+		values
+		(
+			#{name}, 
+			#{typeTime}, 
+			#{nameDetail}, 
+			#{price}, 
+			#{serviceCountf}, 
+			#{forParts}, 
+			#{regulateContent}, 
+			#{serviceContent}, 
+			#{bookingInformation}, 
+			#{tabooPrompt}, 
+			#{type}, 
+			#{creatId}, 
+			#{creatName}, 
+			#{creatTime}, 
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.sm.domain.TypeServiceDO">
+		update sm_type_service 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="typeTime != null">`type_time` = #{typeTime}, </if>
+			<if test="nameDetail != null">`name_detail` = #{nameDetail}, </if>
+			<if test="price != null">`price` = #{price}, </if>
+			<if test="serviceCountf != null">`service_countf` = #{serviceCountf}, </if>
+			<if test="forParts != null">`for_parts` = #{forParts}, </if>
+			<if test="regulateContent != null">`regulate_content` = #{regulateContent}, </if>
+			<if test="serviceContent != null">`service_content` = #{serviceContent}, </if>
+			<if test="bookingInformation != null">`booking_information` = #{bookingInformation}, </if>
+			<if test="tabooPrompt != null">`taboo_prompt` = #{tabooPrompt}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="creatId != null">`creat_id` = #{creatId}, </if>
+			<if test="creatName != null">`creat_name` = #{creatName}, </if>
+			<if test="creatTime != null">`creat_time` = #{creatTime}, </if>
+			<if test="remark != null">`remark` = #{remark}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from sm_type_service where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from sm_type_service where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+						<input id="id" name="id" th:value="${doorTime.id}"  type="hidden">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">预约人员ID：</label>
+								<div class="col-sm-8">
+									<input id="appointmentPersonId" name="appointmentPersonId" th:value="${doorTime.appointmentPersonId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">预约人员：</label>
+								<div class="col-sm-8">
+									<input id="appointmentPerson" name="appointmentPerson" th:value="${doorTime.appointmentPerson}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">预约时间：</label>
+								<div class="col-sm-8">
+									<input id="appointmentTime" name="appointmentTime" th:value="${doorTime.appointmentTime}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">预约类型：</label>
+								<div class="col-sm-8">
+									<input id="appointmentService" name="appointmentService" th:value="${doorTime.appointmentService}" class="form-control" type="text">
+								</div>
+							</div>
+																					<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/sm/doorTime/edit.js">
+	</script>
+</body>
+</html>

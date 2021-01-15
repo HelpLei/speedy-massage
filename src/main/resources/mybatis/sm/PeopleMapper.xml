@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.dao.PeopleDao">
+
+	<select id="get" resultType="com.bootdo.sm.domain.PeopleDO">
+		select `id`,`name`,`nickname`,`photo`,`card`,`phone`,`birthday`,`address`,`consume_count`,`consume_price`,`consume_integral` from sm_people where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.sm.domain.PeopleDO">
+		select `id`,`name`,`nickname`,`photo`,`card`,`phone`,`birthday`,`address`,`consume_count`,`consume_price`,`consume_integral` from sm_people
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="nickname != null and nickname != ''"> and nickname = #{nickname} </if>
+		  		  <if test="photo != null and photo != ''"> and photo = #{photo} </if>
+		  		  <if test="card != null and card != ''"> and card = #{card} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="birthday != null and birthday != ''"> and birthday = #{birthday} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="consumeCount != null and consumeCount != ''"> and consume_count = #{consumeCount} </if>
+		  		  <if test="consumePrice != null and consumePrice != ''"> and consume_price = #{consumePrice} </if>
+		  		  <if test="consumeIntegral != null and consumeIntegral != ''"> and consume_integral = #{consumeIntegral} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from sm_people
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="nickname != null and nickname != ''"> and nickname = #{nickname} </if>
+		  		  <if test="photo != null and photo != ''"> and photo = #{photo} </if>
+		  		  <if test="card != null and card != ''"> and card = #{card} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="birthday != null and birthday != ''"> and birthday = #{birthday} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="consumeCount != null and consumeCount != ''"> and consume_count = #{consumeCount} </if>
+		  		  <if test="consumePrice != null and consumePrice != ''"> and consume_price = #{consumePrice} </if>
+		  		  <if test="consumeIntegral != null and consumeIntegral != ''"> and consume_integral = #{consumeIntegral} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.sm.domain.PeopleDO" useGeneratedKeys="true" keyProperty="id">
+		insert into sm_people
+		(
+			`name`, 
+			`nickname`, 
+			`photo`, 
+			`card`, 
+			`phone`, 
+			`birthday`, 
+			`address`, 
+			`consume_count`, 
+			`consume_price`, 
+			`consume_integral`
+		)
+		values
+		(
+			#{name}, 
+			#{nickname}, 
+			#{photo}, 
+			#{card}, 
+			#{phone}, 
+			#{birthday}, 
+			#{address}, 
+			#{consumeCount}, 
+			#{consumePrice}, 
+			#{consumeIntegral}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.sm.domain.PeopleDO">
+		update sm_people 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="nickname != null">`nickname` = #{nickname}, </if>
+			<if test="photo != null">`photo` = #{photo}, </if>
+			<if test="card != null">`card` = #{card}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="birthday != null">`birthday` = #{birthday}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="consumeCount != null">`consume_count` = #{consumeCount}, </if>
+			<if test="consumePrice != null">`consume_price` = #{consumePrice}, </if>
+			<if test="consumeIntegral != null">`consume_integral` = #{consumeIntegral}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from sm_people where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from sm_people where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.phry.dao.TechnicianDao">
+
+	<select id="get" resultType="com.bootdo.sm.domain.TechnicianDO">
+		select `id`,`type_id`,`name`,`name_picture`,`card`,`age`,`phone`,`address`,`person_detail`,`genre`,`urgency_name`,`urgency_relation`,`urgency_phone`,`join_date`,`out_date`,`number_orders`,`number_sure_price`,`number_price`,`evaluation_score`,`credentials_name`,`credentials_file`,`credentials_name_two`,`credentials_file_two`,`credentials_name_three`,`credentials_file_three`,`credentials_name_four`,`credentials_file_four`,`creat_id`,`creat_name`,`creat_time`,`type`,`remark` from sm_technician where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.sm.domain.TechnicianDO">
+		select `id`,`type_id`,`name`,`name_picture`,`card`,`age`,`phone`,`address`,`person_detail`,`genre`,`urgency_name`,`urgency_relation`,`urgency_phone`,`join_date`,`out_date`,`number_orders`,`number_sure_price`,`number_price`,`evaluation_score`,`credentials_name`,`credentials_file`,`credentials_name_two`,`credentials_file_two`,`credentials_name_three`,`credentials_file_three`,`credentials_name_four`,`credentials_file_four`,`creat_id`,`creat_name`,`creat_time`,`type`,`remark` from sm_technician
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="typeId != null and typeId != ''"> and type_id = #{typeId} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="namePicture != null and namePicture != ''"> and name_picture = #{namePicture} </if>
+		  		  <if test="card != null and card != ''"> and card = #{card} </if>
+		  		  <if test="age != null and age != ''"> and age = #{age} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="personDetail != null and personDetail != ''"> and person_detail = #{personDetail} </if>
+		  		  <if test="genre != null and genre != ''"> and genre = #{genre} </if>
+		  		  <if test="urgencyName != null and urgencyName != ''"> and urgency_name = #{urgencyName} </if>
+		  		  <if test="urgencyRelation != null and urgencyRelation != ''"> and urgency_relation = #{urgencyRelation} </if>
+		  		  <if test="urgencyPhone != null and urgencyPhone != ''"> and urgency_phone = #{urgencyPhone} </if>
+		  		  <if test="joinDate != null and joinDate != ''"> and join_date = #{joinDate} </if>
+		  		  <if test="outDate != null and outDate != ''"> and out_date = #{outDate} </if>
+		  		  <if test="numberOrders != null and numberOrders != ''"> and number_orders = #{numberOrders} </if>
+		  		  <if test="numberSurePrice != null and numberSurePrice != ''"> and number_sure_price = #{numberSurePrice} </if>
+		  		  <if test="numberPrice != null and numberPrice != ''"> and number_price = #{numberPrice} </if>
+		  		  <if test="evaluationScore != null and evaluationScore != ''"> and evaluation_score = #{evaluationScore} </if>
+		  		  <if test="credentialsName != null and credentialsName != ''"> and credentials_name = #{credentialsName} </if>
+		  		  <if test="credentialsFile != null and credentialsFile != ''"> and credentials_file = #{credentialsFile} </if>
+		  		  <if test="credentialsNameTwo != null and credentialsNameTwo != ''"> and credentials_name_two = #{credentialsNameTwo} </if>
+		  		  <if test="credentialsFileTwo != null and credentialsFileTwo != ''"> and credentials_file_two = #{credentialsFileTwo} </if>
+		  		  <if test="credentialsNameThree != null and credentialsNameThree != ''"> and credentials_name_three = #{credentialsNameThree} </if>
+		  		  <if test="credentialsFileThree != null and credentialsFileThree != ''"> and credentials_file_three = #{credentialsFileThree} </if>
+		  		  <if test="credentialsNameFour != null and credentialsNameFour != ''"> and credentials_name_four = #{credentialsNameFour} </if>
+		  		  <if test="credentialsFileFour != null and credentialsFileFour != ''"> and credentials_file_four = #{credentialsFileFour} </if>
+		  		  <if test="creatId != null and creatId != ''"> and creat_id = #{creatId} </if>
+		  		  <if test="creatName != null and creatName != ''"> and creat_name = #{creatName} </if>
+		  		  <if test="creatTime != null and creatTime != ''"> and creat_time = #{creatTime} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from sm_technician
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="typeId != null and typeId != ''"> and type_id = #{typeId} </if>
+		  		  <if test="name != null and name != ''"> and name = #{name} </if>
+		  		  <if test="namePicture != null and namePicture != ''"> and name_picture = #{namePicture} </if>
+		  		  <if test="card != null and card != ''"> and card = #{card} </if>
+		  		  <if test="age != null and age != ''"> and age = #{age} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="address != null and address != ''"> and address = #{address} </if>
+		  		  <if test="personDetail != null and personDetail != ''"> and person_detail = #{personDetail} </if>
+		  		  <if test="genre != null and genre != ''"> and genre = #{genre} </if>
+		  		  <if test="urgencyName != null and urgencyName != ''"> and urgency_name = #{urgencyName} </if>
+		  		  <if test="urgencyRelation != null and urgencyRelation != ''"> and urgency_relation = #{urgencyRelation} </if>
+		  		  <if test="urgencyPhone != null and urgencyPhone != ''"> and urgency_phone = #{urgencyPhone} </if>
+		  		  <if test="joinDate != null and joinDate != ''"> and join_date = #{joinDate} </if>
+		  		  <if test="outDate != null and outDate != ''"> and out_date = #{outDate} </if>
+		  		  <if test="numberOrders != null and numberOrders != ''"> and number_orders = #{numberOrders} </if>
+		  		  <if test="numberSurePrice != null and numberSurePrice != ''"> and number_sure_price = #{numberSurePrice} </if>
+		  		  <if test="numberPrice != null and numberPrice != ''"> and number_price = #{numberPrice} </if>
+		  		  <if test="evaluationScore != null and evaluationScore != ''"> and evaluation_score = #{evaluationScore} </if>
+		  		  <if test="credentialsName != null and credentialsName != ''"> and credentials_name = #{credentialsName} </if>
+		  		  <if test="credentialsFile != null and credentialsFile != ''"> and credentials_file = #{credentialsFile} </if>
+		  		  <if test="credentialsNameTwo != null and credentialsNameTwo != ''"> and credentials_name_two = #{credentialsNameTwo} </if>
+		  		  <if test="credentialsFileTwo != null and credentialsFileTwo != ''"> and credentials_file_two = #{credentialsFileTwo} </if>
+		  		  <if test="credentialsNameThree != null and credentialsNameThree != ''"> and credentials_name_three = #{credentialsNameThree} </if>
+		  		  <if test="credentialsFileThree != null and credentialsFileThree != ''"> and credentials_file_three = #{credentialsFileThree} </if>
+		  		  <if test="credentialsNameFour != null and credentialsNameFour != ''"> and credentials_name_four = #{credentialsNameFour} </if>
+		  		  <if test="credentialsFileFour != null and credentialsFileFour != ''"> and credentials_file_four = #{credentialsFileFour} </if>
+		  		  <if test="creatId != null and creatId != ''"> and creat_id = #{creatId} </if>
+		  		  <if test="creatName != null and creatName != ''"> and creat_name = #{creatName} </if>
+		  		  <if test="creatTime != null and creatTime != ''"> and creat_time = #{creatTime} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.sm.domain.TechnicianDO" useGeneratedKeys="true" keyProperty="id">
+		insert into sm_technician
+		(
+			`type_id`, 
+			`name`, 
+			`name_picture`, 
+			`card`, 
+			`age`, 
+			`phone`, 
+			`address`, 
+			`person_detail`, 
+			`genre`, 
+			`urgency_name`, 
+			`urgency_relation`, 
+			`urgency_phone`, 
+			`join_date`, 
+			`out_date`, 
+			`number_orders`, 
+			`number_sure_price`, 
+			`number_price`, 
+			`evaluation_score`, 
+			`credentials_name`, 
+			`credentials_file`, 
+			`credentials_name_two`, 
+			`credentials_file_two`, 
+			`credentials_name_three`, 
+			`credentials_file_three`, 
+			`credentials_name_four`, 
+			`credentials_file_four`, 
+			`creat_id`, 
+			`creat_name`, 
+			`creat_time`, 
+			`type`, 
+			`remark`
+		)
+		values
+		(
+			#{typeId}, 
+			#{name}, 
+			#{namePicture}, 
+			#{card}, 
+			#{age}, 
+			#{phone}, 
+			#{address}, 
+			#{personDetail}, 
+			#{genre}, 
+			#{urgencyName}, 
+			#{urgencyRelation}, 
+			#{urgencyPhone}, 
+			#{joinDate}, 
+			#{outDate}, 
+			#{numberOrders}, 
+			#{numberSurePrice}, 
+			#{numberPrice}, 
+			#{evaluationScore}, 
+			#{credentialsName}, 
+			#{credentialsFile}, 
+			#{credentialsNameTwo}, 
+			#{credentialsFileTwo}, 
+			#{credentialsNameThree}, 
+			#{credentialsFileThree}, 
+			#{credentialsNameFour}, 
+			#{credentialsFileFour}, 
+			#{creatId}, 
+			#{creatName}, 
+			#{creatTime}, 
+			#{type}, 
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.sm.domain.TechnicianDO">
+		update sm_technician 
+		<set>
+			<if test="typeId != null">`type_id` = #{typeId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="namePicture != null">`name_picture` = #{namePicture}, </if>
+			<if test="card != null">`card` = #{card}, </if>
+			<if test="age != null">`age` = #{age}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="address != null">`address` = #{address}, </if>
+			<if test="personDetail != null">`person_detail` = #{personDetail}, </if>
+			<if test="genre != null">`genre` = #{genre}, </if>
+			<if test="urgencyName != null">`urgency_name` = #{urgencyName}, </if>
+			<if test="urgencyRelation != null">`urgency_relation` = #{urgencyRelation}, </if>
+			<if test="urgencyPhone != null">`urgency_phone` = #{urgencyPhone}, </if>
+			<if test="joinDate != null">`join_date` = #{joinDate}, </if>
+			<if test="outDate != null">`out_date` = #{outDate}, </if>
+			<if test="numberOrders != null">`number_orders` = #{numberOrders}, </if>
+			<if test="numberSurePrice != null">`number_sure_price` = #{numberSurePrice}, </if>
+			<if test="numberPrice != null">`number_price` = #{numberPrice}, </if>
+			<if test="evaluationScore != null">`evaluation_score` = #{evaluationScore}, </if>
+			<if test="credentialsName != null">`credentials_name` = #{credentialsName}, </if>
+			<if test="credentialsFile != null">`credentials_file` = #{credentialsFile}, </if>
+			<if test="credentialsNameTwo != null">`credentials_name_two` = #{credentialsNameTwo}, </if>
+			<if test="credentialsFileTwo != null">`credentials_file_two` = #{credentialsFileTwo}, </if>
+			<if test="credentialsNameThree != null">`credentials_name_three` = #{credentialsNameThree}, </if>
+			<if test="credentialsFileThree != null">`credentials_file_three` = #{credentialsFileThree}, </if>
+			<if test="credentialsNameFour != null">`credentials_name_four` = #{credentialsNameFour}, </if>
+			<if test="credentialsFileFour != null">`credentials_file_four` = #{credentialsFileFour}, </if>
+			<if test="creatId != null">`creat_id` = #{creatId}, </if>
+			<if test="creatName != null">`creat_name` = #{creatName}, </if>
+			<if test="creatTime != null">`creat_time` = #{creatTime}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="remark != null">`remark` = #{remark}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from sm_technician where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from sm_technician where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
