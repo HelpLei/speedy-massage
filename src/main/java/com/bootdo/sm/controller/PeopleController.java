@@ -39,7 +39,7 @@ public class PeopleController {
 	@GetMapping()
 	@RequiresPermissions("phry:people:people")
 	String People(){
-	    return "phry/people/people";
+	    return "sm/people/people";
 	}
 	
 	@ResponseBody
@@ -57,7 +57,7 @@ public class PeopleController {
 	@GetMapping("/add")
 	@RequiresPermissions("phry:people:add")
 	String add(){
-	    return "phry/people/add";
+	    return "sm/people/add";
 	}
 
 	@GetMapping("/edit/{id}")
@@ -65,7 +65,7 @@ public class PeopleController {
 	String edit(@PathVariable("id") Integer id,Model model){
 		PeopleDTO people = peopleService.get(id);
 		model.addAttribute("people", people);
-	    return "phry/people/edit";
+	    return "sm/people/edit";
 	}
 	
 	/**

@@ -1,8 +1,8 @@
 package com.bootdo.sm.dto;
 
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
+
+import java.io.Serializable;
 
 
 
@@ -23,5 +23,6 @@ public class GenreDTO implements Serializable {
 	private String name;
 	//0为显示，1为删除
 	private Integer type;
+
 
 }

@@ -1,12 +1,10 @@
 package com.bootdo.phry.dto;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-
 import com.bootdo.common.domain.FileDO;
-
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.List;
 
 
 
@@ -38,6 +36,7 @@ public class CheckDTO implements Serializable {
 	//考核年度
 	private String checkYear;
 	//考核等级
-	private String checkGlass;	
+	private String checkGlass;
+
 
 }

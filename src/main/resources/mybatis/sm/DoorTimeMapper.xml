@@ -40,10 +40,9 @@
 		  		</where>
 	</select>
 	 
-	<insert id="save" parameterType="com.bootdo.sm.domain.DoorTimeDO">
+	<insert id="save" parameterType="com.bootdo.sm.domain.DoorTimeDO"  useGeneratedKeys="true" keyProperty="id">
 		insert into sm_door_time
 		(
-			`id`, 
 			`appointment_person_id`, 
 			`appointment_person`, 
 			`appointment_time`, 
@@ -51,7 +50,6 @@
 		)
 		values
 		(
-			#{id}, 
 			#{appointmentPersonId}, 
 			#{appointmentPerson}, 
 			#{appointmentTime}, 

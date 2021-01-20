@@ -39,7 +39,7 @@ public class TypeServiceController {
 	@GetMapping()
 	@RequiresPermissions("phry:typeService:typeService")
 	String TypeService(){
-	    return "phry/typeService/typeService";
+	    return "sm/typeService/typeService";
 	}
 	
 	@ResponseBody
@@ -57,7 +57,7 @@ public class TypeServiceController {
 	@GetMapping("/add")
 	@RequiresPermissions("phry:typeService:add")
 	String add(){
-	    return "phry/typeService/add";
+	    return "sm/typeService/add";
 	}
 
 	@GetMapping("/edit/{id}")
@@ -65,7 +65,7 @@ public class TypeServiceController {
 	String edit(@PathVariable("id") Integer id,Model model){
 		TypeServiceDTO typeService = typeServiceService.get(id);
 		model.addAttribute("typeService", typeService);
-	    return "phry/typeService/edit";
+	    return "sm/typeService/edit";
 	}
 	
 	/**

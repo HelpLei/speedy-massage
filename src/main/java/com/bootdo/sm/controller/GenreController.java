@@ -1,26 +1,18 @@
 package com.bootdo.sm.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.bootdo.sm.domain.GenreDO;
-import com.bootdo.sm.dto.GenreDTO;
-import com.bootdo.sm.service.GenreService;
 import com.bootdo.common.utils.PageUtils;
 import com.bootdo.common.utils.Query;
 import com.bootdo.common.utils.R;
+import com.bootdo.sm.dto.GenreDTO;
+import com.bootdo.sm.service.GenreService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 个人类型
@@ -39,7 +31,7 @@ public class GenreController {
 	@GetMapping()
 	@RequiresPermissions("phry:genre:genre")
 	String Genre(){
-	    return "phry/genre/genre";
+	    return "sm/genre/genre";
 	}
 	
 	@ResponseBody
@@ -57,7 +49,7 @@ public class GenreController {
 	@GetMapping("/add")
 	@RequiresPermissions("phry:genre:add")
 	String add(){
-	    return "phry/genre/add";
+	    return "sm/genre/add";
 	}
 
 	@GetMapping("/edit/{id}")
@@ -65,7 +57,7 @@ public class GenreController {
 	String edit(@PathVariable("id") Integer id,Model model){
 		GenreDTO genre = genreService.get(id);
 		model.addAttribute("genre", genre);
-	    return "phry/genre/edit";
+	    return "sm/genre/edit";
 	}
 	
 	/**
@@ -75,6 +67,7 @@ public class GenreController {
 	@PostMapping("/save")
 	@RequiresPermissions("phry:genre:add")
 	public R save( GenreDTO genre){
+		genre.setType(0);
 		return genreService.save(genre);
 	}
 	/**
@@ -84,20 +77,23 @@ public class GenreController {
 	@RequestMapping("/update")
 	@RequiresPermissions("phry:genre:edit")
 	public R update( GenreDTO genre){
+		genre.setType(0);
 		return genreService.update(genre);
 	}
 	
 	/**
-	 * 删除
+	 * 查看
 	 */
 	@PostMapping( "/remove")
 	@ResponseBody
 	@RequiresPermissions("phry:genre:remove")
 	public R remove( Integer id){
-		if(genreService.remove(id)>0){
+		GenreDTO genre= new GenreDTO();
+		genre.setId(id);
+		genre.setType(1);
+		genreService.update(genre);
 			return R.ok();
-		}
-		return R.error();
+
 	}
 	
 	/**

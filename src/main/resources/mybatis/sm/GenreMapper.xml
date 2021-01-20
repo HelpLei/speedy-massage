@@ -36,16 +36,14 @@
 		  		</where>
 	</select>
 	 
-	<insert id="save" parameterType="com.bootdo.sm.domain.GenreDO">
+	<insert id="save" parameterType="com.bootdo.sm.domain.GenreDO"  useGeneratedKeys="true" keyProperty="id">
 		insert into sm_genre
 		(
-			`id`, 
 			`name`, 
 			`type`
 		)
 		values
 		(
-			#{id}, 
 			#{name}, 
 			#{type}
 		)

@@ -47,10 +47,7 @@ function load() {
 								{
 									checkbox : true
 								},
-																{
-									field : 'id', 
-									title : '' 
-								},
+
 																{
 									field : 'name', 
 									title : '个人类型' 

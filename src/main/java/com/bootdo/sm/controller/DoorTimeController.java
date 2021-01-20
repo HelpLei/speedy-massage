@@ -39,7 +39,7 @@ public class DoorTimeController {
 	@GetMapping()
 	@RequiresPermissions("phry:doorTime:doorTime")
 	String DoorTime(){
-	    return "phry/doorTime/doorTime";
+	    return "sm/doorTime/doorTime";
 	}
 	
 	@ResponseBody
@@ -57,7 +57,7 @@ public class DoorTimeController {
 	@GetMapping("/add")
 	@RequiresPermissions("phry:doorTime:add")
 	String add(){
-	    return "phry/doorTime/add";
+	    return "sm/doorTime/add";
 	}
 
 	@GetMapping("/edit/{id}")
@@ -65,7 +65,7 @@ public class DoorTimeController {
 	String edit(@PathVariable("id") Integer id,Model model){
 		DoorTimeDTO doorTime = doorTimeService.get(id);
 		model.addAttribute("doorTime", doorTime);
-	    return "phry/doorTime/edit";
+	    return "sm/doorTime/edit";
 	}
 	
 	/**

@@ -39,7 +39,7 @@ public class TechnicianController {
 	@GetMapping()
 	@RequiresPermissions("phry:technician:technician")
 	String Technician(){
-	    return "phry/technician/technician";
+	    return "sm/technician/technician";
 	}
 	
 	@ResponseBody
@@ -57,7 +57,7 @@ public class TechnicianController {
 	@GetMapping("/add")
 	@RequiresPermissions("phry:technician:add")
 	String add(){
-	    return "phry/technician/add";
+	    return "sm/technician/add";
 	}
 
 	@GetMapping("/edit/{id}")
@@ -65,7 +65,7 @@ public class TechnicianController {
 	String edit(@PathVariable("id") Integer id,Model model){
 		TechnicianDTO technician = technicianService.get(id);
 		model.addAttribute("technician", technician);
-	    return "phry/technician/edit";
+	    return "sm/technician/edit";
 	}
 	
 	/**
