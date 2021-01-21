@@ -95,7 +95,20 @@ public class GenreController {
 			return R.ok();
 
 	}
-	
+	/**
+	 * 查看
+	 */
+	@PostMapping( "/remove2")
+	@ResponseBody
+	@RequiresPermissions("phry:genre:remove")
+	public R remove2( Integer id){
+		GenreDTO genre= new GenreDTO();
+		genre.setId(id);
+		genre.setType(0);
+		genreService.update(genre);
+		return R.ok();
+
+	}
 	/**
 	 * 删除
 	 */

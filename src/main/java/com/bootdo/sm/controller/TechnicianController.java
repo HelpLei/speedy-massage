@@ -1,26 +1,22 @@
 package com.bootdo.sm.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.bootdo.sm.domain.TechnicianDO;
-import com.bootdo.sm.dto.TechnicianDTO;
-import com.bootdo.sm.service.TechnicianService;
 import com.bootdo.common.utils.PageUtils;
 import com.bootdo.common.utils.Query;
 import com.bootdo.common.utils.R;
+import com.bootdo.sm.dto.GenreDTO;
+import com.bootdo.sm.dto.TechnicianDTO;
+import com.bootdo.sm.service.GenreService;
+import com.bootdo.sm.service.TechnicianService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 技师人员
@@ -35,10 +31,13 @@ import com.bootdo.common.utils.R;
 public class TechnicianController {
 	@Autowired
 	private TechnicianService technicianService;
-	
+	@Autowired
+	private GenreService genreService;
 	@GetMapping()
 	@RequiresPermissions("phry:technician:technician")
-	String Technician(){
+	String Technician(Model model){
+
+
 	    return "sm/technician/technician";
 	}
 	
@@ -56,7 +55,11 @@ public class TechnicianController {
 	
 	@GetMapping("/add")
 	@RequiresPermissions("phry:technician:add")
-	String add(){
+	String add(Model model){
+		HashMap<String,Object> type=new HashMap<>();
+		type.put("type","0");
+		List<GenreDTO> genreList = genreService.list(type);
+		model.addAttribute("labels", genreList);
 	    return "sm/technician/add";
 	}
 
@@ -75,6 +78,10 @@ public class TechnicianController {
 	@PostMapping("/save")
 	@RequiresPermissions("phry:technician:add")
 	public R save( TechnicianDTO technician){
+		Date date=new Date();
+		technician.setJoinDate(date);
+		technician.setOutDate(date);
+		technician.setCreatTime(date);
 		return technicianService.save(technician);
 	}
 	/**
@@ -84,6 +91,9 @@ public class TechnicianController {
 	@RequestMapping("/update")
 	@RequiresPermissions("phry:technician:edit")
 	public R update( TechnicianDTO technician){
+		Date date=new Date();
+		technician.setCreatTime(date);
+
 		return technicianService.update(technician);
 	}
 	

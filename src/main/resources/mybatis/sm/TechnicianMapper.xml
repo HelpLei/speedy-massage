@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bootdo.phry.dao.TechnicianDao">
+<mapper namespace="com.bootdo.sm.dao.TechnicianDao">
 
 	<select id="get" resultType="com.bootdo.sm.domain.TechnicianDO">
 		select `id`,`type_id`,`name`,`name_picture`,`card`,`age`,`phone`,`address`,`person_detail`,`genre`,`urgency_name`,`urgency_relation`,`urgency_phone`,`join_date`,`out_date`,`number_orders`,`number_sure_price`,`number_price`,`evaluation_score`,`credentials_name`,`credentials_file`,`credentials_name_two`,`credentials_file_two`,`credentials_name_three`,`credentials_file_three`,`credentials_name_four`,`credentials_file_four`,`creat_id`,`creat_name`,`creat_time`,`type`,`remark` from sm_technician where id = #{value}

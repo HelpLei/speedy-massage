@@ -52,10 +52,23 @@ function load() {
 									field : 'name', 
 									title : '个人类型' 
 								},
-																{
+								/*								{
 									field : 'type', 
 									title : '0为显示，1为删除' 
-								},
+								},*/
+							{
+								field : 'type',
+								title : '状态',
+								formatter : function(value, row, index) {
+									if(value =="0"){
+										return '<span class="label label-primary" style="background-color: #55c98e;padding: 5px 12px;font-size: 0.8rem">启用</span>';
+
+									}else if(value =="1"){
+										return '<span class="label label-danger" style="background-color: #fb5a63;padding: 5px 12px;font-size: 0.8rem">禁用</span>';
+
+									}
+								}
+							},
 																{
 									title : '操作',
 									field : 'id',
@@ -64,9 +77,20 @@ function load() {
 										var e = '<a class="btn btn-primary btn-sm '+s_edit_h+'" href="#" mce_href="#" title="编辑" onclick="edit(\''
 												+ row.id
 												+ '\')"><i class="fa fa-edit"></i></a> ';
-										var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="删除"  mce_href="#" onclick="remove(\''
+										var d ='';
+										if(row.type == "0"){
+											d = '<a class="" href="#" title="禁用"   mce_href="#" onclick="remove(\''
 												+ row.id
-												+ '\')"><i class="fa fa-remove"></i></a> ';
+												+ '\',1)"><img src="/img/jinyong2.png"></a> ';
+										}else {
+											d = '<a class="" href="#" title="启用"  mce_href="#" onclick="remove2(\''
+												+ row.id
+												+ '\',0)"><img src="/img/qiyong2.png"></a> ';
+										}
+
+										/*var d = '<a class="btn btn-warning btn-sm '+s_remove_h+'" href="#" title="禁用"  mce_href="#" onclick="remove(\''
+												+ row.id
+												+ '\')"><i class="fa fa-remove"></i></a> ';*/
 										var f = '<a class="btn btn-success btn-sm" href="#" title="备用"  mce_href="#" onclick="resetPwd(\''
 												+ row.id
 												+ '\')"><i class="fa fa-key"></i></a> ';
@@ -99,7 +123,7 @@ function edit(id) {
 	});
 }
 function remove(id) {
-	layer.confirm('确定要删除选中的记录？', {
+	layer.confirm('确定要禁用选中的记录？', {
 		btn : [ '确定', '取消' ]
 	}, function() {
 		$.ajax({
@@ -119,7 +143,27 @@ function remove(id) {
 		});
 	})
 }
-
+function remove2(id) {
+	layer.confirm('确定要启用选中的记录？', {
+		btn : [ '确定', '取消' ]
+	}, function() {
+		$.ajax({
+			url : prefix+"/remove2",
+			type : "post",
+			data : {
+				'id' : id
+			},
+			success : function(r) {
+				if (r.code==0) {
+					layer.msg(r.msg);
+					reLoad();
+				}else{
+					layer.msg(r.msg);
+				}
+			}
+		});
+	})
+}
 function resetPwd(id) {
 }
 function batchRemove() {

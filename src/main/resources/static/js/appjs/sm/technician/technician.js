@@ -47,22 +47,16 @@ function load() {
 								{
 									checkbox : true
 								},
-																{
-									field : 'id', 
-									title : '技师ID' 
-								},
-																{
-									field : 'typeId', 
-									title : '技师会的技能' 
-								},
+
+							{
+								field : 'namePicture',
+								title : '头像上传'
+							},
 																{
 									field : 'name', 
 									title : '姓名' 
 								},
-																{
-									field : 'namePicture', 
-									title : '头像上传' 
-								},
+
 																{
 									field : 'card', 
 									title : '身份证' 
@@ -103,74 +97,20 @@ function load() {
 									field : 'joinDate', 
 									title : '加入时间' 
 								},
-																{
-									field : 'outDate', 
-									title : '离职时间' 
-								},
-																{
-									field : 'numberOrders', 
-									title : '订单数' 
-								},
-																{
-									field : 'numberSurePrice', 
-									title : '订单实际所获得的价格' 
-								},
-																{
-									field : 'numberPrice', 
-									title : '订单价格' 
-								},
-																{
-									field : 'evaluationScore', 
-									title : '评价平均分数' 
-								},
-																{
-									field : 'credentialsName', 
-									title : '证书名称' 
-								},
-																{
-									field : 'credentialsFile', 
-									title : '证书上传id' 
-								},
-																{
-									field : 'credentialsNameTwo', 
-									title : '证书名称' 
-								},
-																{
-									field : 'credentialsFileTwo', 
-									title : '证书上传id' 
-								},
-																{
-									field : 'credentialsNameThree', 
-									title : '证书名称' 
-								},
-																{
-									field : 'credentialsFileThree', 
-									title : '证书上传id' 
-								},
-																{
-									field : 'credentialsNameFour', 
-									title : '证书名称' 
-								},
-																{
-									field : 'credentialsFileFour', 
-									title : '证书上传id' 
-								},
-																{
-									field : 'creatId', 
-									title : '创建人员id' 
-								},
-																{
-									field : 'creatName', 
-									title : '创建人员姓名' 
-								},
-																{
-									field : 'creatTime', 
-									title : '创建时间' 
-								},
-																{
-									field : 'type', 
-									title : '0为正常，1为删除' 
-								},
+
+							{
+								field : 'type',
+								title : '状态',
+								formatter : function(value, row, index) {
+									if(value =="0"){
+										return '<span class="label label-primary" style="background-color: #55c98e;padding: 5px 12px;font-size: 0.8rem">启用</span>';
+
+									}else if(value =="1"){
+										return '<span class="label label-danger" style="background-color: #fb5a63;padding: 5px 12px;font-size: 0.8rem">禁用</span>';
+
+									}
+								}
+							},
 																{
 									field : 'remark', 
 									title : '备注' 
@@ -203,7 +143,7 @@ function add() {
 		title : '增加',
 		maxmin : true,
 		shadeClose : false, // 点击遮罩关闭层
-		area : [ '800px', '520px' ],
+		area : [ '90%', '90%' ],
 		content : prefix + '/add' // iframe的url
 	});
 }
@@ -213,7 +153,7 @@ function edit(id) {
 		title : '编辑',
 		maxmin : true,
 		shadeClose : false, // 点击遮罩关闭层
-		area : [ '800px', '520px' ],
+		area : [ '90%', '90%' ],
 		content : prefix + '/edit/' + id // iframe的url
 	});
 }
