@@ -15,7 +15,11 @@ function save() {
             fileIds.push(temp);
         } 
     }
-    $("#fileId").val(fileIds.toString());
+    $("#credentialsFile").val(fileIds.toString());
+
+
+    $("#credentialsFileTwo").val( $("input[name='decideFile']").val());
+
 
 	$.ajax({
 		cache : true,

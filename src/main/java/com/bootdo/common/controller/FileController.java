@@ -160,6 +160,22 @@ public class FileController extends BaseController {
 		}
 		return R.error();
 	}
+	@ResponseBody
+	@PostMapping("/ajaxUpload2")
+	public R ajaxUpload2(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+		String name = file.getOriginalFilename();
+		String fileName = FileUtil.renameToUUID(name);
+		FileDO sysFile = new FileDO(FileType.fileType(fileName), "/files/" + fileName, new Date());
+		try {
+			FileUtil.uploadFile(file.getBytes(), bootdoConfig.getUploadPath(), fileName);
+		} catch (Exception e) {
+			return R.error().put("code", 0);
+		}
 
+		if (sysFileService.save(sysFile) > 0) {
+			return R.ok().put("id", sysFile.getId()).put("code", 1).put("url", sysFile.getUrl());
+		}
+		return R.error().put("code", 0);
+	}
 
 }
